@@ -1,188 +1,189 @@
 <h1 align="center">Gboard Patches</h1>
 
 <p align="center">
-  Morphe patches for Gboard focused on core productivity, English &amp; Vietnamese input, and BlackBerry-style flick completion.
+  Morphe patches for Gboard focused on core productivity, English &amp; Vietnamese input, and BlackBerry-style flick-up word completion.
 </p>
 
 <p align="center">
-  <a href="https://github.com/jasonwu1994/Gboard-patches/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/jasonwu1994/Gboard-patches?display_name=tag&label=Release&style=for-the-badge"></a>
-  <a href="https://github.com/jasonwu1994/Gboard-patches"><img alt="Total downloads" src="https://img.shields.io/github/downloads/jasonwu1994/Gboard-patches/total?label=Downloads&style=for-the-badge"></a>
-  <a href="https://morphe.software/add-source?github=jasonwu1994/Gboard-patches"><img alt="Add to Morphe" src="https://img.shields.io/badge/Morphe-Add%20Source-00A8FF?style=for-the-badge"></a>
-  <a href="https://github.com/jasonwu1994/Gboard-patches"><img alt="GitHub stars" src="https://img.shields.io/github/stars/jasonwu1994/Gboard-patches?style=social"></a>
-</p>
-
-<p align="center">
-  <a href="https://ko-fi.com/jasonwu1994"><img height="40" alt="Buy me a coffee on Ko-fi" src="https://storage.ko-fi.com/cdn/kofi5.png?v=3"></a>
+  <a href="https://github.com/evilcoder13/Gboard-patches/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/evilcoder13/Gboard-patches?display_name=tag&label=Release&style=for-the-badge"></a>
+  <a href="https://github.com/evilcoder13/Gboard-patches"><img alt="Total downloads" src="https://img.shields.io/github/downloads/evilcoder13/Gboard-patches/total?label=Downloads&style=for-the-badge"></a>
+  <a href="https://morphe.software/add-source?github=evilcoder13/Gboard-patches"><img alt="Add to Morphe" src="https://img.shields.io/badge/Morphe-Add%20Source-00A8FF?style=for-the-badge"></a>
+  <a href="https://github.com/evilcoder13/Gboard-patches"><img alt="GitHub stars" src="https://img.shields.io/github/stars/evilcoder13/Gboard-patches?style=social"></a>
 </p>
 
 ## Overview
 
-Gboard Patches is a streamlined Morphe source for Gboard enhancements, retaining core usability improvements for English and Vietnamese typing alongside BlackBerry-style flick-up word completion.
+**Gboard Patches** là bộ patch Morphe tinh giản dành riêng cho người dùng gõ tiếng Việt và tiếng Anh:
+- **Tập trung cốt lõi**: Đã loại bỏ các layout/bộ gõ không cần thiết (Zhuyin, Bopomofo, OCR tiếng Trung/Nhật/Hàn,...), giữ ứng dụng nhẹ và mượt mà.
+- **Tính năng độc quyền Flick-Up Word Completion (phong cách BlackBerry)**: Vuốt phím lên để chọn từ gợi ý ngay lập tức mà không cần với tay lên thanh gợi ý (Suggestion Bar).
+- **Hỗ trợ đầy đủ**: Bàn phím tách (Split Keyboard), Clipboards nâng cao, thanh công cụ biên tập văn bản (Select All, Cut, Copy, Paste), Advanced Voice Typing...
 
-## Included Patches
+> **Lưu ý về cử chỉ (Gesture)**: 
+> Tính năng *Flick-Up Word Completion* nhận diện cử chỉ vuốt nhanh hướng lên trên thân bàn phím (chia theo 3 vùng Trái - Giữa - Phải tương ứng với 3 từ gợi ý trên Candidates Bar). Nếu bạn hay bị lẫn với thao tác lướt nối chữ (*Glide Typing* của Gboard), bạn có thể chủ động tắt tính năng **Lướt phím để nhập (Glide Typing)** trong phần cài đặt chính của Gboard: `Cài đặt Gboard > Lướt phím để nhập (Glide typing) > Tắt`.
 
-### Project-Built Features
+---
 
-Features designed and built by this project rather than simply unlocking an existing Gboard flag.
+## Included Patches (21 Patches)
+
+### Tính năng được phát triển thêm (Project-Built Features)
 
 <details>
   <summary><code>Flick-Up Word Completion</code></summary>
 
-  Swipe up on the left, center, or right region of the keyboard body to select the corresponding candidate word from the suggestion bar, similar to the BlackBerry 10 / KEYone keyboard.
+  Vuốt lên trên vùng Trái / Giữa / Phải của thân bàn phím để chọn nhanh từ gợi ý tương ứng ở thanh ứng cử viên (tương tự trải nghiệm bàn phím BlackBerry 10 / KEYone).
 </details>
 
 <details>
   <summary><code>Clipboard Enhancements</code></summary>
 
-  Lets you enhance clipboard retention time, item count limits, preview lines, countdown and creation-time labels, order index, grid columns, and optionally render only the first 1,000 characters on each clipboard card.
+  Tùy chỉnh thời gian lưu trữ clipboard, số lượng mục tối đa, số dòng xem trước, nhãn đếm ngược thời gian tạo, chỉ mục sắp xếp, số cột dạng lưới và giới hạn số ký tự hiển thị.
 </details>
 
 <details>
   <summary><code>Long-Press Editing Shortcuts</code></summary>
 
-  Add Select all, Undo, Copy, Cut, Paste, and Redo long-press shortcuts to Latin alphabet layouts (English and Vietnamese), with an optional globe-key drag gesture that follows the same physical key positions.
+  Thêm các phím tắt nhấn giữ: Chọn tất cả (Select all), Hoàn tác (Undo), Sao chép (Copy), Cắt (Cut), Dán (Paste), Làm lại (Redo) trên bàn phím chữ cái (tiếng Việt & tiếng Anh).
 </details>
 
 <details>
   <summary><code>Toolbar Editing Buttons</code></summary>
 
-  Add Select All, Copy, Cut and Paste to the menu. Drag them to the top toolbar and
-  use them with different keyboard languages in supported editors.
+  Thêm các nút Chọn tất cả, Sao chép, Cắt và Dán vào menu thanh công cụ. Có thể kéo thả lên toolbar trên cùng để thao tác văn bản nhanh.
 </details>
 
 <details>
   <summary><code>Incognito Mode Toggle</code></summary>
 
-  Add an Incognito toggle to the Access Point toolbar and configure clipboard and voice typing availability while Incognito mode is active.
+  Thêm nút bật/tắt chế độ Ẩn danh (Incognito) ngay trên thanh công cụ Access Point.
 </details>
 
 <details>
   <summary><code>Swipe Down to Dismiss Keyboard</code></summary>
 
-  Swipe down from the suggestions or toolbar to close the keyboard.
+  Vuốt xuống từ thanh gợi ý hoặc thanh công cụ để đóng bàn phím nhanh chóng.
 </details>
 
 <details>
   <summary><code>Latin Globe Key Ignore Interval</code></summary>
 
-  Add an independent English/Latin globe key ignore interval override for post-typing language-switch delay.
+  Tùy chỉnh khoảng thời gian bỏ qua phím địa cầu (Globe key) sau khi gõ phím để tránh chạm nhầm đổi ngôn ngữ.
 </details>
 
 <details>
   <summary><code>Backup &amp; Restore</code></summary>
 
-  Exports all Gboard Patches settings to a portable JSON backup and restores only the modules you select, with per-module and per-key results. It also exports, compares, and restores Gboard's raw PB/XML flag-store files.
+  Sao lưu và khôi phục toàn bộ cài đặt patch ra file JSON hoặc các cờ Flag PB/XML của Gboard.
 </details>
 
-
-### Gboard Feature Unlocks
-
-Features already present in Gboard that are exposed by enabling hidden settings, rollout gates, or built-in behavior.
+### Mở khóa tính năng ẩn của Gboard (Gboard Feature Unlocks)
 
 <details>
   <summary><code>Advanced Voice Typing</code></summary>
 
-  Enable Advanced Voice Typing with automatic punctuation and speech recognition engine selection.
+  Mở khóa tính năng Nhập liệu bằng giọng nói nâng cao (Advanced Voice Typing) với tính năng tự động thêm dấu chấm câu.
 </details>
 
 <details>
   <summary><code>Enable OCR / Scan Text</code></summary>
 
-  Enable the OCR / Scan Text feature with Latin script recognition (supporting English and Vietnamese).
+  Mở khóa tính năng Quét văn bản (OCR / Scan Text) hỗ trợ ký tự Latinh (tiếng Việt và tiếng Anh).
 </details>
 
 <details>
   <summary><code>English QWERTY Up-Flick Uppercase</code></summary>
 
-  Flick up on the English QWERTY keyboard to toggle uppercase and lowercase.
+  Vuốt lên trên bàn phím QWERTY tiếng Anh để viết hoa ký tự.
 </details>
 
 <details>
   <summary><code>Enable Inline Autofill Suggestions</code></summary>
 
-  Enables inline autofill suggestions in supported contexts.
+  Bật hiển thị gợi ý tự động điền (Autofill) nội dòng trong các trường nhập liệu tương thích.
 </details>
 
 <details>
   <summary><code>Grammar Checker</code></summary>
 
-  Enables the <code>Text correction &gt; Grammar check</code> setting and its related rollout gate.
+  Mở khóa tính năng Kiểm tra ngữ pháp (Grammar check) trong menu *Sửa văn bản*.
 </details>
 
 <details>
-  <summary><code>Inline Suggestions</code></summary>
+  <summary><code>Inline Suggestions (Smart Compose)</code></summary>
 
-  Enables the <code>Text correction &gt; Smart Compose</code> setting and its related rollout gate.
+  Bật gợi ý thông minh Smart Compose nội dòng.
 </details>
 
 <details>
   <summary><code>Use Bluetooth Microphone</code></summary>
 
-  Enables the <code>Voice typing &gt; Use Bluetooth microphone</code> setting and its related rollout gate.
+  Cho phép sử dụng micrô tai nghe Bluetooth khi nhập liệu bằng giọng nói.
 </details>
 
 <details>
   <summary><code>Enable cursor trackpad mode</code></summary>
 
-  Enables the long-press-spacebar trackpad, cursor lock mode, and the required scrub-move preference.
+  Mở khóa chế độ rê con trỏ (trackpad) bằng cách nhấn giữ và lướt trên phím cách (Spacebar).
 </details>
 
 <details>
   <summary><code>Enable split keyboard</code></summary>
 
-  Enables Gboard's split keyboard layout.
+  Kích hoạt giao diện bàn phím chia đôi (Split keyboard) cho máy tính bảng hoặc màn hình gập.
 </details>
 
 <details>
   <summary><code>Close Proactive Suggestions</code></summary>
 
-  Shows a dismiss button in the proactive suggestions bar.
+  Hiển thị nút đóng thanh gợi ý chủ động.
 </details>
 
 <details>
   <summary><code>Clipboard Custom Character Limit</code></summary>
 
-  Lets you set the maximum number of characters stored for each text clipboard item, with Gboard's stock 20,000-character limit as the default.
+  Cho phép tùy chỉnh độ dài tối đa của văn bản lưu trong clipboard.
 </details>
 
 <details>
   <summary><code>Package Rename</code></summary>
 
-  Renames the patched package so it can be installed alongside the official Gboard app.
+  Đổi package name để cài đặt song song với bản Gboard gốc.
 </details>
 
-## Install
+---
 
-Add this repository as a Morphe source:
+## Cài đặt vào Morphe Manager
 
-- [Open in Morphe](https://morphe.software/add-source?github=jasonwu1994/Gboard-patches)
-- Or manually add `https://github.com/jasonwu1994/Gboard-patches`
+Thêm nguồn repository này trực tiếp vào ứng dụng **Morphe Manager**:
 
-## Build
+- **Nhấn mở trực tiếp**: [Thêm nguồn vào Morphe](https://morphe.software/add-source?github=evilcoder13/Gboard-patches)
+- **Hoặc thêm thủ công URL**: `https://github.com/evilcoder13/Gboard-patches`
 
-Before running Gradle locally, authenticate to Morphe's GitHub Packages registry with either:
+---
 
-- `gpr.user` and `gpr.key` in `~/.gradle/gradle.properties`
-- `GITHUB_ACTOR` and `GITHUB_TOKEN` as environment variables
+## Tự Build cục bộ (Local Build)
 
-Build the Android patch bundle:
+Cần cấu hình GitHub Packages token (`read:packages`) vào `~/.gradle/gradle.properties`:
+```properties
+gpr.user=YOUR_GITHUB_USERNAME
+gpr.key=YOUR_GITHUB_TOKEN
+```
+
+Lệnh build bundle patch cho Android:
 
 ```powershell
 .\gradlew.bat :patches:buildAndroid
 ```
 
-Regenerate patch metadata:
+Tạo lại metadata danh sách patch:
 
 ```powershell
 .\gradlew.bat generatePatchesList
 ```
 
-Generated outputs:
+File bundle `.mpp` sẽ được tạo tại `patches/build/libs/patches-*.mpp`.
 
-- `patches/build/libs/*.mpp`
-- `patches-list.json`
-- `patches-bundle.json`
+---
 
 ## License
 
-Released under the [GNU General Public License v3.0](LICENSE).
+Phát hành theo giấy phép [GNU General Public License v3.0](LICENSE).
