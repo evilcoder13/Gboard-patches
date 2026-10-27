@@ -2,8 +2,8 @@ package dev.jason.gboardpatches.patches.gboard.registry
 
 import dev.jason.gboardpatches.patches.gboard.features.closeproactivesuggestions.gboardCloseProactiveSuggestionsFeatureMarkerPatch
 import dev.jason.gboardpatches.patches.gboard.features.closeproactivesuggestions.gboardCloseProactiveSuggestionsFlagValuePatch
-import dev.jason.gboardpatches.patches.gboard.features.quickinsert.gboardQuickInsertFeatureMarkerPatch
-import dev.jason.gboardpatches.patches.gboard.features.quickinsert.gboardQuickInsertFlagValuePatch
+import dev.jason.gboardpatches.patches.gboard.features.flickupcomplete.gboardFlickUpCompleteBytecodePatch
+import dev.jason.gboardpatches.patches.gboard.features.flickupcomplete.gboardFlickUpCompleteFeatureMarkerPatch
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
@@ -17,16 +17,16 @@ class GboardRuntimePatchesContractTest {
         val close = registrations.single { patch ->
             patch.name == "Close Proactive Suggestions"
         }
-        val quick = registrations.single { patch -> patch.name == "Quick Insert" }
+        val flickUp = registrations.single { patch -> patch.name == "Flick-Up Word Completion" }
 
         assertSame(gboardCloseProactiveSuggestionsPatch, close)
-        assertSame(gboardQuickInsertPatch, quick)
+        assertSame(gboardFlickUpCompletePatch, flickUp)
 
         val generated = generatedPublishedPatches().associateBy { patch ->
             patch["name"].asString
         }
         assertTrue(generated.getValue(close.name!!)["use"].asBoolean)
-        assertTrue(generated.getValue(quick.name!!)["use"].asBoolean)
+        assertTrue(generated.getValue(flickUp.name!!)["use"].asBoolean)
     }
 
     @Test
@@ -38,12 +38,11 @@ class GboardRuntimePatchesContractTest {
             dependency === gboardCloseProactiveSuggestionsFlagValuePatch
         })
 
-
-        assertTrue(gboardQuickInsertPatch.dependencies.any { dependency ->
-            dependency === gboardQuickInsertFeatureMarkerPatch
+        assertTrue(gboardFlickUpCompletePatch.dependencies.any { dependency ->
+            dependency === gboardFlickUpCompleteFeatureMarkerPatch
         })
-        assertTrue(gboardQuickInsertPatch.dependencies.any { dependency ->
-            dependency === gboardQuickInsertFlagValuePatch
+        assertTrue(gboardFlickUpCompletePatch.dependencies.any { dependency ->
+            dependency === gboardFlickUpCompleteBytecodePatch
         })
     }
 
@@ -55,9 +54,9 @@ class GboardRuntimePatchesContractTest {
             gboardCloseProactiveSuggestionsPatch.description,
         )
         assertEquals(
-            "啟用快速插入面板與工具列入口\n" +
-                "Enable the Quick Insert panel and toolbar access point.",
-            gboardQuickInsertPatch.description,
+            "向上滑動鍵盤左、中、右區域以快速選擇對應候選詞（BlackBerry 風格）\n" +
+                "Flick up in the left, center, or right keyboard zone to commit the matching candidate word (BlackBerry style).",
+            gboardFlickUpCompletePatch.description,
         )
     }
 }

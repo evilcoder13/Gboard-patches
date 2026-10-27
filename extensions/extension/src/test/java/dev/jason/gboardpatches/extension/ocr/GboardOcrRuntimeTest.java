@@ -24,48 +24,33 @@ public final class GboardOcrRuntimeTest {
     }
 
     @Test
-    public void chineseBackendSelectsExactThinAndThickMetadata() {
-        GboardOcrRuntime.setEngineOverrideForTests(GboardOcrEngine.CHINESE);
+    public void latinBackendSelectsExactThinAndThickMetadata() {
+        GboardOcrRuntime.setEngineOverrideForTests(GboardOcrEngine.LATIN);
         GboardOcrRuntime.setThickAvailabilityOverrideForTests(Boolean.FALSE);
 
         Assert.assertEquals(
-                "taser_tflite_gocrchinese_and_latin_mbv2_aksara_layout_gcn_mobile",
+                "taser_tflite_gocrlatin_mbv2_scriptid_aksara_layout_gcn_mobile",
                 GboardOcrRuntime.applyConfigLabel("stock"));
-        Assert.assertEquals("zh", GboardOcrRuntime.applyLanguageHint("stock"));
-        Assert.assertEquals("play-services-mlkit-text-recognition-chinese",
+        Assert.assertEquals("en", GboardOcrRuntime.applyLanguageHint("stock"));
+        Assert.assertEquals("play-services-mlkit-text-recognition",
                 GboardOcrRuntime.applyLoggingLibrary("stock"));
-        Assert.assertEquals("optional-module-text-chinese",
+        Assert.assertEquals("ocr",
                 GboardOcrRuntime.applyOptionalModuleName("stock"));
-        Assert.assertEquals("com.google.android.gms.mlkit_ocr_chinese",
+        Assert.assertEquals("com.google.android.gms.vision.ocr",
                 GboardOcrRuntime.applyModuleId("stock"));
-        Assert.assertFalse(GboardOcrRuntime.applyModuleAvailability(true));
+        Assert.assertFalse(GboardOcrRuntime.applyModuleAvailability(false));
 
         GboardOcrRuntime.setThickAvailabilityOverrideForTests(Boolean.TRUE);
-        Assert.assertEquals("text-recognition-chinese",
+        Assert.assertEquals("text-recognition",
                 GboardOcrRuntime.applyLoggingLibrary("stock"));
-        Assert.assertEquals("com.google.mlkit.dynamite.text.chinese",
+        Assert.assertEquals("com.google.mlkit.dynamite.text.latin",
                 GboardOcrRuntime.applyModuleId("stock"));
         Assert.assertTrue(GboardOcrRuntime.applyModuleAvailability(false));
     }
 
     @Test
-    public void nonLatinModuleRequestIncludesLegacyAndSelectedFeatures() {
-        GboardOcrRuntime.setEngineOverrideForTests(GboardOcrEngine.CHINESE);
-        FakeRequest[] stock = new FakeRequest[]{new FakeRequest("vision.ocr")};
-
-        Object result = GboardOcrRuntime.applyOptionalModuleRequest(stock);
-
-        Assert.assertTrue(result instanceof FakeRequest[]);
-        FakeRequest[] requests = (FakeRequest[]) result;
-        Assert.assertEquals(3, requests.length);
-        Assert.assertEquals("vision.ocr", requests[0].a);
-        Assert.assertEquals("mlkit.ocr.common", requests[1].a);
-        Assert.assertEquals("mlkit.ocr.chinese", requests[2].a);
-    }
-
-    @Test
     public void formalThickPathEmptyRequestStaysAuthoritative() {
-        GboardOcrRuntime.setEngineOverrideForTests(GboardOcrEngine.CHINESE);
+        GboardOcrRuntime.setEngineOverrideForTests(GboardOcrEngine.LATIN);
         FakeRequest[] stock = new FakeRequest[0];
 
         Assert.assertSame(stock, GboardOcrRuntime.applyOptionalModuleRequest(stock));
@@ -76,29 +61,12 @@ public final class GboardOcrRuntimeTest {
         GboardOcrRuntime.setEngineOverrideForTests(GboardOcrEngine.LATIN);
         FakeRequest[] stock = new FakeRequest[]{new FakeRequest("vision.ocr")};
         Assert.assertSame(stock, GboardOcrRuntime.applyOptionalModuleRequest(stock));
-
-        GboardOcrRuntime.setEngineOverrideForTests(GboardOcrEngine.DEVANAGARI);
-        GboardOcrRuntime.ThinPayloadSpec payload =
-                GboardOcrRuntime.buildSelectedThinPayloadSpec();
-        Assert.assertEquals("hi", payload.languageHint);
-        Assert.assertEquals(3, payload.languageOption);
-        Assert.assertEquals("optional-module-text-devanagari", payload.optionalModule);
-        Assert.assertTrue(payload.enableOptionalModule);
     }
 
     @Test
-    public void moduleInstallRequestsCoverEveryBackend() {
+    public void moduleInstallRequestsCoverLatinBackend() {
         Assert.assertArrayEquals(new String[]{"vision.ocr"},
                 GboardOcrRuntime.selectedOptionalModuleNames(GboardOcrEngine.LATIN));
-        Assert.assertArrayEquals(
-                new String[]{"vision.ocr", "mlkit.ocr.common", "mlkit.ocr.chinese"},
-                GboardOcrRuntime.selectedOptionalModuleNames(GboardOcrEngine.CHINESE));
-        Assert.assertArrayEquals(new String[]{"vision.ocr", "mlkit.ocr.japanese"},
-                GboardOcrRuntime.selectedOptionalModuleNames(GboardOcrEngine.JAPANESE));
-        Assert.assertArrayEquals(new String[]{"vision.ocr", "mlkit.ocr.korean"},
-                GboardOcrRuntime.selectedOptionalModuleNames(GboardOcrEngine.KOREAN));
-        Assert.assertArrayEquals(new String[]{"vision.ocr", "mlkit.ocr.devanagari"},
-                GboardOcrRuntime.selectedOptionalModuleNames(GboardOcrEngine.DEVANAGARI));
     }
 
     private static final class FakeRequest {

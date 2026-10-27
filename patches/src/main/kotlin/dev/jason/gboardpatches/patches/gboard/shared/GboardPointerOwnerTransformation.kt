@@ -28,8 +28,6 @@ internal fun interface GboardPointerOwnerTransformation {
 internal enum class GboardPointerOwnerFeature {
     ENGLISH_QWERTY,
     LONG_PRESS_QUICK_ACTIONS,
-    TOP_ROW_SWIPE,
-    ZHUYIN_SLIDE,
 }
 
 internal data class GboardPointerOwnerFeatureSpec(
@@ -40,8 +38,6 @@ internal data class GboardPointerOwnerFeatureSpec(
 internal val GBOARD_POINTER_OWNER_COMPOSITION_ORDER = listOf(
     GboardPointerOwnerFeature.ENGLISH_QWERTY,
     GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS,
-    GboardPointerOwnerFeature.TOP_ROW_SWIPE,
-    GboardPointerOwnerFeature.ZHUYIN_SLIDE,
 )
 
 internal fun interface GboardPointerOwnerTransformationAdapter {
@@ -165,10 +161,7 @@ private fun MutableMethod.requireExact1803PointerOwnerStockShape() {
 private fun GboardPointerOwnerTransformationContext.requireExactSelectedLifecycleStock(
     selected: Set<GboardPointerOwnerFeature>,
 ) {
-    if (
-        GboardPointerOwnerFeature.TOP_ROW_SWIPE in selected ||
-        GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in selected
-    ) {
+    if (GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in selected) {
         pointerFinishMethod.requireSupportedPointerLifecycleStock(PointerLifecycleRole.FINISH)
     }
     if (selected.hasPointerCleanupFeature()) {
@@ -252,9 +245,7 @@ private fun MutableMethod.requireExact1803PointerLifecycleShape(role: PointerLif
 private fun Set<GboardPointerOwnerFeature>.hasPointerCleanupFeature(): Boolean =
     any { feature ->
         feature == GboardPointerOwnerFeature.ENGLISH_QWERTY ||
-            feature == GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS ||
-            feature == GboardPointerOwnerFeature.TOP_ROW_SWIPE ||
-            feature == GboardPointerOwnerFeature.ZHUYIN_SLIDE
+            feature == GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS
     }
 
 private fun MutableClass.validatePointerOwnerBindings(
@@ -365,41 +356,6 @@ private val POINTER_RUNTIME_CALLS_BY_FEATURE = mapOf(
         ),
         pointerRuntimeAbi(
             RuntimeCallId.LONG_PRESS_QUICK_ACTIONS_RUNTIME_ON_GLOBE_POINTER_CANCEL,
-            listOf("Ljava/lang/Object;"),
-            "V",
-        ),
-    ),
-    GboardPointerOwnerFeature.TOP_ROW_SWIPE to listOf(
-        pointerRuntimeAbi(
-            RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_MAYBE_ARM_AND_RESOLVE_TOP_ROW_OWNER,
-            listOf(
-                "Ljava/lang/Object;",
-                "Ljava/lang/Object;",
-                "Ljava/lang/Object;",
-                "F",
-                "F",
-            ),
-            "Ljava/lang/Object;",
-        ),
-        pointerRuntimeAbi(
-            RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_FINISH_SWIPE_SESSION,
-            listOf("Ljava/lang/Object;"),
-            "V",
-        ),
-        pointerRuntimeAbi(
-            RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_CLEAR_SWIPE_SESSION,
-            listOf("Ljava/lang/Object;"),
-            "V",
-        ),
-    ),
-    GboardPointerOwnerFeature.ZHUYIN_SLIDE to listOf(
-        pointerRuntimeAbi(
-            RuntimeCallId.ZHUYIN_SLIDE_RUNTIME_MAYBE_CAPTURE_AND_SHOULD_SUPPRESS_RETARGET,
-            listOf("Ljava/lang/Object;", "Ljava/lang/Object;", "F", "F"),
-            "Z",
-        ),
-        pointerRuntimeAbi(
-            RuntimeCallId.ZHUYIN_SLIDE_RUNTIME_CLEAR_POINTER_STATE,
             listOf("Ljava/lang/Object;"),
             "V",
         ),
@@ -594,8 +550,6 @@ private fun GboardPointerOwnerTransformationContext.verifyPointerOwnerCalls(
         LONG_PRESS_OWNER_CALL to if (GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in selected) {
             1 + if (GboardPointerOwnerFeature.ENGLISH_QWERTY in selected) 1 else 0
         } else 0,
-        TOP_ROW_OWNER_CALL to if (GboardPointerOwnerFeature.TOP_ROW_SWIPE in selected) 1 else 0,
-        ZHUYIN_OWNER_CALL to if (GboardPointerOwnerFeature.ZHUYIN_SLIDE in selected) 1 else 0,
     )
     expectedCallCounts.forEach { (descriptor, count) ->
         check(ownerCalls.count { (_, actual) -> actual == descriptor } == count) {
@@ -620,12 +574,7 @@ private fun GboardPointerOwnerTransformationContext.verifyPointerOwnerCalls(
     }
     check(rIndex >= 0 && acIndex > rIndex) { "Malformed Gboard pointer-owner anchors" }
     val englishIndex = ownerCalls.singleIndexOrNull(ENGLISH_OWNER_CALL)
-    val zhuyinIndex = ownerCalls.singleIndexOrNull(ZHUYIN_OWNER_CALL)
     check(englishIndex == null || englishIndex < rIndex)
-    check(zhuyinIndex == null || zhuyinIndex < rIndex)
-    check(englishIndex == null || zhuyinIndex == null || englishIndex < zhuyinIndex)
-    val topRowIndex = ownerCalls.singleIndexOrNull(TOP_ROW_OWNER_CALL)
-    check(topRowIndex == null || topRowIndex == acIndex + 1)
     ownerCalls.filter { (_, descriptor) -> descriptor == LONG_PRESS_OWNER_CALL }
         .forEach { (index, _) ->
             check(pointerOwnerMethod.implementation!!.instructions[index] is RegisterRangeInstruction)
@@ -636,19 +585,11 @@ private fun GboardPointerOwnerTransformationContext.verifyPointerOwnerCalls(
             check(invoke.registerCount == 2)
             check(pointerOwnerMethod.implementation!!.instructions[index + 1].opcode == Opcode.RETURN_VOID)
         }
-    listOfNotNull(englishIndex, zhuyinIndex, topRowIndex).forEach { index ->
+    listOfNotNull(englishIndex).forEach { index ->
         val invoke = pointerOwnerMethod.implementation!!.instructions[index] as FiveRegisterInstruction
-        val expected = when (index) {
-            topRowIndex -> listOf(14, 15, 3, 0, 1)
-            else -> listOf(14, 15, 0, 1)
-        }
-        val expectedOpcode = if (index == englishIndex) {
-            Opcode.INVOKE_DIRECT
-        } else {
-            Opcode.INVOKE_STATIC
-        }
+        val expected = listOf(14, 15, 0, 1)
         check(
-            pointerOwnerMethod.implementation!!.instructions[index].opcode == expectedOpcode &&
+            pointerOwnerMethod.implementation!!.instructions[index].opcode == Opcode.INVOKE_DIRECT &&
                 invoke.registers() == expected
         ) { "Malformed pointer-owner opcode or register wiring" }
     }
@@ -659,52 +600,29 @@ private fun GboardPointerOwnerTransformationContext.verifyCleanupCalls(
 ) {
     val hasEnglish = GboardPointerOwnerFeature.ENGLISH_QWERTY in selected
     val hasLongPress = GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in selected
-    val hasTopRow = GboardPointerOwnerFeature.TOP_ROW_SWIPE in selected
-    val hasZhuyin = GboardPointerOwnerFeature.ZHUYIN_SLIDE in selected
     val allMethods = ownerClass.methods
-    check(allMethods.sumOf { method -> method.countCalls(TOP_ROW_FINISH_CALL) } ==
-        if (hasTopRow) pointerFinishMethod.returnInstructionIndices().size else 0)
-    if (hasTopRow) {
-        pointerFinishMethod.verifyCallImmediatelyBeforeReturns(TOP_ROW_FINISH_CALL)
-    }
     check(allMethods.sumOf { method -> method.countCalls(LONG_PRESS_FINISH_CALL) } ==
         if (hasLongPress) pointerFinishMethod.returnInstructionIndices().size else 0)
     check(allMethods.sumOf { method -> method.countCalls(LONG_PRESS_CANCEL_CALL) } ==
         if (hasLongPress) 2 else 0)
-    mapOf(
-        ENGLISH_CLEAR_CALL to hasEnglish,
-        ZHUYIN_CLEAR_CALL to hasZhuyin,
-    ).forEach { (descriptor, enabled) ->
-        check(allMethods.sumOf { method -> method.countCalls(descriptor) } == if (enabled) 2 else 0)
-    }
-    check(allMethods.sumOf { method -> method.countCalls(TOP_ROW_CLEAR_CALL) } == if (hasTopRow) {
-        pointerCancelMethod.returnInstructionIndices().size + 1
-    } else 0)
-    if (!hasEnglish && !hasLongPress && !hasTopRow && !hasZhuyin) return
+    check(allMethods.sumOf { method -> method.countCalls(ENGLISH_CLEAR_CALL) } ==
+        if (hasEnglish) 2 else 0)
+    if (!hasEnglish && !hasLongPress) return
 
-    if (hasTopRow) {
-        pointerCancelMethod.verifyCallImmediatelyBeforeReturns(TOP_ROW_CLEAR_CALL)
-    }
     val expectedCancelEntry = selected.expectedPointerCancelEntryCalls()
-    val expectedCancelOrder = expectedCancelEntry +
-        listOfNotNull(TOP_ROW_CLEAR_CALL.takeIf { hasTopRow })
     val expectedResetOrder = selected.expectedPointerResetEntryCalls()
     val expectedFinishOrder = listOfNotNull(
         LONG_PRESS_FINISH_CALL.takeIf { hasLongPress },
-        TOP_ROW_FINISH_CALL.takeIf { hasTopRow },
     )
     pointerFinishMethod.verifyCallsImmediatelyBeforeReturns(expectedFinishOrder)
     pointerCancelMethod.verifyEntryCalls(expectedCancelEntry)
     pointerResetMethod.verifyEntryCalls(expectedResetOrder)
-    check(pointerCancelMethod.transformationCallIndices().map { it.second } == expectedCancelOrder)
+    check(pointerCancelMethod.transformationCallIndices().map { it.second } == expectedCancelEntry)
     check(pointerResetMethod.transformationCallIndices().map { it.second } == expectedResetOrder)
 }
 
 private fun Set<GboardPointerOwnerFeature>.expectedPointerCancelEntryCalls(): List<MethodCall> =
     buildList {
-        if (GboardPointerOwnerFeature.ZHUYIN_SLIDE in this@expectedPointerCancelEntryCalls) {
-            add(ZHUYIN_CLEAR_CALL)
-        }
         if (GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in
             this@expectedPointerCancelEntryCalls
         ) {
@@ -717,12 +635,6 @@ private fun Set<GboardPointerOwnerFeature>.expectedPointerCancelEntryCalls(): Li
 
 private fun Set<GboardPointerOwnerFeature>.expectedPointerResetEntryCalls(): List<MethodCall> =
     buildList {
-        if (GboardPointerOwnerFeature.ZHUYIN_SLIDE in this@expectedPointerResetEntryCalls) {
-            add(ZHUYIN_CLEAR_CALL)
-        }
-        if (GboardPointerOwnerFeature.TOP_ROW_SWIPE in this@expectedPointerResetEntryCalls) {
-            add(TOP_ROW_CLEAR_CALL)
-        }
         if (GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in
             this@expectedPointerResetEntryCalls
         ) {
@@ -740,10 +652,6 @@ private fun GboardPointerOwnerTransformationContext.verifyExactNormalizedLifecyc
 
     val normalizedOwner = MutableClass(ownerClass)
     val normalized = GboardPointerOwnerTransformationContext.from(normalizedOwner)
-    if (GboardPointerOwnerFeature.TOP_ROW_SWIPE in selected) {
-        normalized.pointerFinishMethod.removeCallsImmediatelyBeforeReturns(TOP_ROW_FINISH_CALL)
-        normalized.pointerCancelMethod.removeCallsImmediatelyBeforeReturns(TOP_ROW_CLEAR_CALL)
-    }
     if (GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in selected) {
         normalized.pointerFinishMethod.removeCallsImmediatelyBeforeReturns(
             LONG_PRESS_FINISH_CALL,
@@ -756,10 +664,7 @@ private fun GboardPointerOwnerTransformationContext.verifyExactNormalizedLifecyc
         selected.expectedPointerResetEntryCalls(),
     )
     val normalizedLifecycle = buildList {
-        if (
-            GboardPointerOwnerFeature.TOP_ROW_SWIPE in selected ||
-            GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in selected
-        ) {
+        if (GboardPointerOwnerFeature.LONG_PRESS_QUICK_ACTIONS in selected) {
             add(normalized.pointerFinishMethod)
         }
         add(normalized.pointerCancelMethod)
@@ -928,32 +833,20 @@ private val ENGLISH_OWNER_CALL by lazy { MethodCall(
 )}
 private val LONG_PRESS_OWNER_CALL =
     RuntimeCallId.LONG_PRESS_QUICK_ACTIONS_RUNTIME_MAYBE_ENSURE_LONG_PRESS_SCHEDULED.methodCall()
-private val TOP_ROW_OWNER_CALL =
-    RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_MAYBE_ARM_AND_RESOLVE_TOP_ROW_OWNER.methodCall()
-private val ZHUYIN_OWNER_CALL =
-    RuntimeCallId.ZHUYIN_SLIDE_RUNTIME_MAYBE_CAPTURE_AND_SHOULD_SUPPRESS_RETARGET.methodCall()
 private val ENGLISH_CLEAR_CALL by lazy { MethodCall(
     GboardVersionBindings.pointerOwner.ownerDescriptor,
     "jasondevClearEnglishAnchor",
     emptyList(),
     "V",
 )}
-private val TOP_ROW_CLEAR_CALL = RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_CLEAR_SWIPE_SESSION.methodCall()
-private val TOP_ROW_FINISH_CALL = RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_FINISH_SWIPE_SESSION.methodCall()
 private val LONG_PRESS_CANCEL_CALL =
     RuntimeCallId.LONG_PRESS_QUICK_ACTIONS_RUNTIME_ON_GLOBE_POINTER_CANCEL.methodCall()
 private val LONG_PRESS_FINISH_CALL =
     RuntimeCallId.LONG_PRESS_QUICK_ACTIONS_RUNTIME_ON_GLOBE_POINTER_FINISH.methodCall()
-private val ZHUYIN_CLEAR_CALL = RuntimeCallId.ZHUYIN_SLIDE_RUNTIME_CLEAR_POINTER_STATE.methodCall()
 private val ALL_TRANSFORMATION_CALLS by lazy { listOf(
     ENGLISH_OWNER_CALL,
     LONG_PRESS_OWNER_CALL,
-    TOP_ROW_OWNER_CALL,
-    ZHUYIN_OWNER_CALL,
     ENGLISH_CLEAR_CALL,
-    TOP_ROW_CLEAR_CALL,
-    TOP_ROW_FINISH_CALL,
     LONG_PRESS_CANCEL_CALL,
     LONG_PRESS_FINISH_CALL,
-    ZHUYIN_CLEAR_CALL,
 )}

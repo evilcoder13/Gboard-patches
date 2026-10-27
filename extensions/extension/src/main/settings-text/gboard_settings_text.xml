@@ -3268,4 +3268,24 @@
         <translation locale="en">Voice typing has three modes: Standard, Standard - Advanced features (colorful microphone), and Rambler. Standard - Advanced features requires the Dictation payload.</translation>
         <translation locale="zh-Hant">語音輸入分為三種：標準、標準-進階功能（彩色麥克風）以及 Rambler。「標準-進階功能」需要 Dictation payload。</translation>
     </string>
+    <string name="gboard_patches_flick_up_completion_title">
+        <translation locale="en">Flick-Up Word Completion</translation>
+        <translation locale="zh-Hant">上滑選字補全</translation>
+    </string>
+    <string name="gboard_patches_flick_up_completion_summary">
+        <translation locale="en">Flick up on the left, center, or right side of the keyboard to select the corresponding candidate word.</translation>
+        <translation locale="zh-Hant">在鍵盤左、中、右側向上滑動以選取對應位置的候選字。</translation>
+    </string>
+    <string name="gboard_patches_flick_up_completion_section">
+        <translation locale="en">Feature</translation>
+        <translation locale="zh-Hant">功能</translation>
+    </string>
+    <string name="gboard_patches_flick_up_completion_enabled_title">
+        <translation locale="en">Enable flick-up completion</translation>
+        <translation locale="zh-Hant">啟用上滑選字補全</translation>
+    </string>
+    <string name="gboard_patches_flick_up_completion_enabled_summary">
+        <translation locale="en">Flick up on the left, center, or right third of the keyboard to accept the left, center, or right candidate suggestion.</translation>
+        <translation locale="zh-Hant">在鍵盤左、中、右三分之一區域向上滑動，分別選取左、中、右候選字。</translation>
+    </string>
 </settings-text>

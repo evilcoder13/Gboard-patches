@@ -10,14 +10,14 @@ class GboardSoftKeyFamilySelectionStoreTest {
         val store = GboardSoftKeyFamilySelectionStore<Any>()
         val context = Any()
 
-        store.add(context, GboardSoftKeyFamilyFeature.TOP_ROW_SWIPE)
-        store.add(context, GboardSoftKeyFamilyFeature.TOP_ROW_SWIPE)
-        store.add(context, GboardSoftKeyFamilyFeature.ZHUYIN_TOGGLE)
+        store.add(context, GboardSoftKeyFamilyFeature.LONG_PRESS_QUICK_ACTIONS)
+        store.add(context, GboardSoftKeyFamilyFeature.LONG_PRESS_QUICK_ACTIONS)
+        store.add(context, GboardSoftKeyFamilyFeature.ENGLISH_QWERTY)
 
         assertEquals(
             setOf(
-                GboardSoftKeyFamilyFeature.TOP_ROW_SWIPE,
-                GboardSoftKeyFamilyFeature.ZHUYIN_TOGGLE,
+                GboardSoftKeyFamilyFeature.LONG_PRESS_QUICK_ACTIONS,
+                GboardSoftKeyFamilyFeature.ENGLISH_QWERTY,
             ),
             store.take(context).toSet(),
         )

@@ -52,7 +52,7 @@ class GboardDeveloperOnlyPatchLoaderIntegrationTest {
         assertEquals("PatchLoader subprocess failed: $output", 0, exitCode)
         assertEquals(
             listOf(
-                "Developer options",
+                "Backup & Restore",
                 EXTERNAL_PACKAGE,
                 "APKM",
                 EXTERNAL_SIGNATURE,
@@ -107,8 +107,8 @@ class GboardDeveloperOnlyPatchLoaderIntegrationTest {
                 }
 
                 public Set<String> admittedContributions(String featureId) {
-                    if ("developer_options".equals(featureId)) {
-                        return Collections.singleton("developer_options.resources");
+                    if ("backup_restore".equals(featureId)) {
+                        return Collections.singleton("backup_restore.marker");
                     }
                     return Collections.emptySet();
                 }
@@ -148,17 +148,17 @@ class GboardDeveloperOnlyPatchLoaderIntegrationTest {
                         Collections.singleton(new File(args[0]))
                     );
                     TreeSet<String> names = new TreeSet<>();
-                    Object developerOptions = null;
+                    Object targetPatch = null;
                     for (Object patch : patches) {
                         Object name = patch.getClass().getMethod("getName").invoke(patch);
                         if (name != null) {
                             names.add((String) name);
-                            if ("Developer options".equals(name)) developerOptions = patch;
+                            if ("Backup & Restore".equals(name)) targetPatch = patch;
                         }
                     }
-                    if (developerOptions == null) throw new AssertionError("Developer options missing");
-                    List<?> compatibilities = (List<?>) developerOptions.getClass()
-                        .getMethod("getCompatibility").invoke(developerOptions);
+                    if (targetPatch == null) throw new AssertionError("Backup & Restore missing");
+                    List<?> compatibilities = (List<?>) targetPatch.getClass()
+                        .getMethod("getCompatibility").invoke(targetPatch);
                     if (compatibilities.size() != 1) {
                         throw new AssertionError("Expected exactly one compatibility");
                     }
@@ -178,7 +178,7 @@ class GboardDeveloperOnlyPatchLoaderIntegrationTest {
                     );
                     Map<?, ?> compatibleVersions = (Map<?, ?>) mostCommonVersions.invoke(
                         null,
-                        Collections.singleton(developerOptions),
+                        Collections.singleton(targetPatch),
                         Collections.singleton(packageName),
                         false
                     );

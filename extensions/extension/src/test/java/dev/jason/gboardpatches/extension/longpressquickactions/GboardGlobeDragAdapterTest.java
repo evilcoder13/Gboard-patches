@@ -24,7 +24,7 @@ public final class GboardGlobeDragAdapterTest {
     }
 
     @Test
-    public void nonZhuyinTerminalDoesNotFallBackToSemanticLetterMapping() {
+    public void terminalNeverFallsBackToSemanticLetterMapping() {
         Assert.assertNull(GboardGlobeDragAdapter.resolveTerminalShortcut(
                 false,
                 GboardEditingShortcutPolicy.Shortcut.REDO,
@@ -34,7 +34,7 @@ public final class GboardGlobeDragAdapterTest {
                         false,
                         GboardEditingShortcutPolicy.Shortcut.REDO,
                         GboardEditingShortcutPolicy.Shortcut.UNDO));
-        Assert.assertSame(GboardEditingShortcutPolicy.Shortcut.CUT,
+        Assert.assertSame(GboardEditingShortcutPolicy.Shortcut.COPY,
                 GboardGlobeDragAdapter.resolveTerminalShortcut(
                         true,
                         GboardEditingShortcutPolicy.Shortcut.CUT,

@@ -142,7 +142,6 @@ class GboardTargetNativeRetirementSourceTest {
             "FLAG_DEVICE_INTELLIGENCE" to "FEATURE_DEVICE_INTELLIGENCE",
             "FLAG_GRAMMAR_CHECKER" to "FEATURE_GRAMMAR_CHECKER",
             "FLAG_INLINE_SUGGESTIONS" to "FEATURE_INLINE_SUGGESTIONS",
-            "FLAG_KEY_SHAPE_SELECTION" to "FEATURE_KEY_SHAPE_SELECTION",
         )
         val SURVIVING_MARKER_FILES = listOf(
             "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/features/" +
@@ -151,8 +150,6 @@ class GboardTargetNativeRetirementSourceTest {
                 "featureflags/GboardGrammarCheckerFeatureMarkerPatch.kt",
             "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/features/" +
                 "featureflags/GboardInlineSuggestionsFeatureMarkerPatch.kt",
-            "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/features/" +
-                "featureflags/GboardKeyShapeSelectionFeatureMarkerPatch.kt",
         )
     }
 }

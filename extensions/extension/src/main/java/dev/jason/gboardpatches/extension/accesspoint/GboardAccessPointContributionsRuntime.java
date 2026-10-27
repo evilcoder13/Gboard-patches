@@ -9,7 +9,6 @@ import java.util.Set;
 
 import dev.jason.gboardpatches.extension.manualincognito.GboardManualIncognitoRuntime;
 import dev.jason.gboardpatches.extension.settings.GboardPatchesFeatureAvailability;
-import dev.jason.gboardpatches.extension.websearch.GboardFloatingWebSearchAccessPointContribution;
 
 public final class GboardAccessPointContributionsRuntime {
     private static final String TAG = "GboardPatches";
@@ -26,15 +25,6 @@ public final class GboardAccessPointContributionsRuntime {
             }
         } catch (Throwable failure) {
             logFailure("Manual Incognito catalog contribution failed", failure);
-        }
-        try {
-            if (hasFeature(context,
-                    GboardPatchesFeatureAvailability.FEATURE_FLOATING_WEB_SEARCH)) {
-                result = GboardFloatingWebSearchAccessPointContribution.INSTANCE
-                        .extendOrderCatalog(context, result);
-            }
-        } catch (Throwable failure) {
-            logFailure("Floating Web Search catalog contribution failed", failure);
         }
         try {
             if (hasFeature(context, GboardPatchesFeatureAvailability.FEATURE_EDITING_ACCESS_POINTS)) {
@@ -61,15 +51,6 @@ public final class GboardAccessPointContributionsRuntime {
             }
         } catch (Throwable failure) {
             logFailure("Manual Incognito controller contribution failed", failure);
-        }
-        try {
-            if (hasFeature(context,
-                    GboardPatchesFeatureAvailability.FEATURE_FLOATING_WEB_SEARCH)) {
-                GboardFloatingWebSearchAccessPointContribution.INSTANCE.register(
-                        controller, context);
-            }
-        } catch (Throwable failure) {
-            logFailure("Floating Web Search controller contribution failed", failure);
         }
         try {
             if (hasFeature(context, GboardPatchesFeatureAvailability.FEATURE_EDITING_ACCESS_POINTS)) {

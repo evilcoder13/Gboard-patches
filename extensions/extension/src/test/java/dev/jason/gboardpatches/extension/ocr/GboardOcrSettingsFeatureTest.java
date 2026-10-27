@@ -24,7 +24,7 @@ public final class GboardOcrSettingsFeatureTest {
     }
 
     @Test
-    public void screenShowsEveryBackendWithCurrentAndInstallationState() {
+    public void screenShowsLatinBackendWithCurrentAndInstallationState() {
         InMemoryPreferences preferences = new InMemoryPreferences();
         CapturingHost host = new CapturingHost(preferences);
         CapturingModuleInstallRequester requester = new CapturingModuleInstallRequester();
@@ -35,33 +35,24 @@ public final class GboardOcrSettingsFeatureTest {
         List<GboardPatchesSettingsContract.NavigationRow> checkingRows = findBackendRows(
                 checkingScreen.getRows());
 
-        Assert.assertEquals(5, availability.requestCount);
+        Assert.assertEquals(1, availability.requestCount);
         Assert.assertEquals("Checking installation status…", checkingRows.get(0).getSummary());
         Assert.assertFalse(checkingRows.get(0).isEnabled());
 
         availability.resolve(GboardOcrEngine.LATIN, true);
-        availability.resolve(GboardOcrEngine.CHINESE, true);
-        availability.resolve(GboardOcrEngine.JAPANESE, false);
-        availability.resolve(GboardOcrEngine.KOREAN, false);
-        availability.resolve(GboardOcrEngine.DEVANAGARI, true);
         GboardPatchesSettingsContract.Screen screen = feature.buildScreen(host);
         List<GboardPatchesSettingsContract.NavigationRow> rows = findBackendRows(
                 screen.getRows());
 
-        Assert.assertEquals(5, rows.size());
+        Assert.assertEquals(1, rows.size());
         Assert.assertEquals(
                 "Official models must be downloaded through Google Play services.",
                 screen.getHeaderSummary());
         Assert.assertArrayEquals(
-                new String[]{"Latin", "Chinese", "Japanese", "Korean", "Devanagari"},
+                new String[]{"Latin"},
                 rows.stream().map(row -> row.getTitle().toString()).toArray(String[]::new));
         Assert.assertEquals("Installed", rows.get(0).getSummary());
         Assert.assertEquals("Current", rows.get(0).getTrailingText());
-        Assert.assertEquals("Installed", rows.get(1).getSummary());
-        Assert.assertNull(rows.get(1).getTrailingText());
-        Assert.assertEquals("Not installed. Tap to download.", rows.get(2).getSummary());
-        Assert.assertEquals("Not installed. Tap to download.", rows.get(3).getSummary());
-        Assert.assertEquals("Installed", rows.get(4).getSummary());
         Assert.assertTrue(rows.stream().noneMatch(
                 GboardPatchesSettingsContract.NavigationRow::shouldShowChevron));
     }
@@ -76,16 +67,14 @@ public final class GboardOcrSettingsFeatureTest {
                 new GboardOcrSettingsFeature(null, requester, availability);
         feature.buildScreen(host);
         availability.resolve(GboardOcrEngine.LATIN, true);
-        availability.resolve(GboardOcrEngine.CHINESE, true);
-        availability.resolveRemaining(false);
         List<GboardPatchesSettingsContract.NavigationRow> rows = findBackendRows(
                 feature.buildScreen(host).getRows());
 
         int refreshesBeforeSelection = host.refreshCount;
 
-        rows.get(1).getAction().run();
+        rows.get(0).getAction().run();
 
-        Assert.assertEquals(GboardOcrEngine.CHINESE, GboardOcrSettings.readEngine(preferences));
+        Assert.assertEquals(GboardOcrEngine.LATIN, GboardOcrSettings.readEngine(preferences));
         Assert.assertEquals(0, requester.requestCount);
         Assert.assertEquals(refreshesBeforeSelection + 1, host.refreshCount);
     }
@@ -100,28 +89,26 @@ public final class GboardOcrSettingsFeatureTest {
         GboardOcrSettingsFeature feature =
                 new GboardOcrSettingsFeature(null, requester, availability);
         feature.buildScreen(host);
-        availability.resolve(GboardOcrEngine.LATIN, true);
-        availability.resolveRemaining(false);
+        availability.resolve(GboardOcrEngine.LATIN, false);
         List<GboardPatchesSettingsContract.NavigationRow> rows = findBackendRows(
                 feature.buildScreen(host).getRows());
         int refreshesBeforeSelection = host.refreshCount;
 
-        rows.get(3).getAction().run();
+        rows.get(0).getAction().run();
 
-        Assert.assertEquals(GboardOcrEngine.KOREAN, requester.engine);
-        Assert.assertEquals(GboardOcrEngine.LATIN, GboardOcrSettings.readEngine(preferences));
+        Assert.assertEquals(GboardOcrEngine.LATIN, requester.engine);
         Assert.assertEquals(refreshesBeforeSelection + 1, host.refreshCount);
         GboardPatchesSettingsContract.NavigationRow downloadingRow =
-                findBackendRows(feature.buildScreen(host).getRows()).get(3);
+                findBackendRows(feature.buildScreen(host).getRows()).get(0);
         Assert.assertEquals("Downloading…", downloadingRow.getSummary());
         Assert.assertFalse(downloadingRow.isEnabled());
 
         requester.succeed();
 
-        Assert.assertEquals(GboardOcrEngine.KOREAN, GboardOcrSettings.readEngine(preferences));
+        Assert.assertEquals(GboardOcrEngine.LATIN, GboardOcrSettings.readEngine(preferences));
         Assert.assertEquals(refreshesBeforeSelection + 2, host.refreshCount);
         GboardPatchesSettingsContract.NavigationRow installedRow =
-                findBackendRows(feature.buildScreen(host).getRows()).get(3);
+                findBackendRows(feature.buildScreen(host).getRows()).get(0);
         Assert.assertEquals("Installed", installedRow.getSummary());
         Assert.assertEquals("Current", installedRow.getTrailingText());
     }
@@ -135,21 +122,20 @@ public final class GboardOcrSettingsFeatureTest {
         GboardOcrSettingsFeature feature =
                 new GboardOcrSettingsFeature(null, requester, availability);
         feature.buildScreen(host);
-        availability.resolve(GboardOcrEngine.LATIN, true);
-        availability.resolveRemaining(false);
+        availability.resolve(GboardOcrEngine.LATIN, false);
         GboardPatchesSettingsContract.Screen screen = feature.buildScreen(host);
         List<GboardPatchesSettingsContract.NavigationRow> rows = findBackendRows(
                 screen.getRows());
         int refreshesBeforeSelection = host.refreshCount;
 
-        rows.get(3).getAction().run();
+        rows.get(0).getAction().run();
         requester.fail();
 
-        Assert.assertEquals(GboardOcrEngine.KOREAN, requester.engine);
+        Assert.assertEquals(GboardOcrEngine.LATIN, requester.engine);
         Assert.assertEquals(GboardOcrEngine.LATIN, GboardOcrSettings.readEngine(preferences));
         Assert.assertEquals(refreshesBeforeSelection + 2, host.refreshCount);
         GboardPatchesSettingsContract.NavigationRow failedRow =
-                findBackendRows(feature.buildScreen(host).getRows()).get(3);
+                findBackendRows(feature.buildScreen(host).getRows()).get(0);
         Assert.assertEquals("Download failed. Tap to retry.", failedRow.getSummary());
         Assert.assertTrue(failedRow.isEnabled());
     }

@@ -97,35 +97,23 @@ public final class GboardSettingsGroupingTest {
                 "new GboardKeyboardToolsSettingsGroupFeature(context)",
                 "new GboardKeyboardLayoutSettingsGroupFeature(context)",
                 "new GboardClipboardSettingsFeature()",
-                "new GboardSettingsHomepageSettingsFeature()",
-                "new GboardDeveloperOptionsSettingsFeature(context)");
+                "new GboardBackupRestoreSettingsFeature()");
         assertInOrder(aiVoiceGroupSource.substring(aiVoiceGroupSource.indexOf("Arrays.asList(")),
-                "new GboardAiWritingToolsSettingsFeature(context)",
                 "new GboardAdvancedVoiceSettingsFeature(context)",
                 "new GboardBluetoothMicrophoneSettingsFeature(context)");
         assertInOrder(toolsGroupSource.substring(toolsGroupSource.indexOf("Arrays.asList(")),
-                "new GboardTopRowSwipeSettingsFeature(context)",
                 "new GboardManualIncognitoSettingsFeature(context)",
                 "new GboardLongPressQuickActionsSettingsFeature(context)",
+                "new GboardEditingAccessPointsSettingsFeature(context)",
                 "new GboardCursorTrackpadSettingsFeature(context)",
                 "new GboardOcrSettingsFeature(context)",
-                "new GboardQuickInsertSettingsFeature(context)",
-                "new GboardFloatingWebSearchSettingsFeature(context)",
-                "new GboardCalculatorSettingsFeature(context)",
-                "new GboardSwipeDismissSettingsFeature(context)");
+                "new GboardSwipeDismissSettingsFeature(context)",
+                "new GboardFlickUpCompleteSettingsFeature(context)");
         assertInOrder(layoutGroupSource.substring(layoutGroupSource.indexOf("Arrays.asList(")),
-                "new GboardSpacebarLogoSettingsFeature(context)",
                 "new GboardCloseProactiveSuggestionsSettingsFeature(context)",
                 "new GboardLatinGlobeKeyIgnoreIntervalSettingsFeature(context)",
                 "new GboardEnglishUppercaseToggleSettingsFeature(context)",
-                "new GboardZhuyinBottomRowWeightSettingsFeature(context)",
-                "new GboardSymbolFooterOrderSettingsFeature(context)",
-                "new GboardEmojiSizeSettingsFeature(context)",
-                "new GboardAccessPointsMenuSettingsFeature(context)",
-                "new GboardSplitKeyboardSettingsFeature(context)",
-                "new GboardAccessibilityLayoutSettingsFeature(context)",
-                "new GboardRoundedKeyboardSettingsFeature(context)",
-                "new GboardAccessPointCountSettingsFeature(context)");
+                "new GboardSplitKeyboardSettingsFeature(context)");
         Assert.assertFalse(registrySource.contains("GboardKeyboardSettingsGroupFeature"));
     }
 
@@ -143,14 +131,12 @@ public final class GboardSettingsGroupingTest {
                 "dev.jason.gboardpatches.feature.close_proactive_suggestions"));
         Assert.assertFalse(availabilitySource.contains(
                 "dev.jason.gboardpatches.feature.flow_mode_animation"));
-        Assert.assertTrue(availabilitySource.contains(
-                "dev.jason.gboardpatches.feature.quick_insert"));
-        Assert.assertTrue(availabilitySource.contains("FEATURE_ACCESS_POINT_COUNT"));
-        Assert.assertTrue(availabilitySource.contains(
-                "dev.jason.gboardpatches.feature.access_point_count"));
         Assert.assertTrue(availabilitySource.contains("FEATURE_SWIPE_DISMISS"));
         Assert.assertTrue(availabilitySource.contains(
                 "dev.jason.gboardpatches.feature.swipe_dismiss"));
+        Assert.assertTrue(availabilitySource.contains("FEATURE_FLICK_UP_WORD_COMPLETION"));
+        Assert.assertTrue(availabilitySource.contains(
+                "dev.jason.gboardpatches.feature.flick_up_word_completion"));
     }
 
     @Test
@@ -169,19 +155,12 @@ public final class GboardSettingsGroupingTest {
         Assert.assertTrue(availabilitySource.contains("FEATURE_ENGLISH_UPPERCASE_TOGGLE"));
         Assert.assertTrue(availabilitySource.contains(
                 "dev.jason.gboardpatches.feature.english_uppercase_toggle"));
-        Assert.assertTrue(availabilitySource.contains("FEATURE_AI_WRITING_TOOLS"));
-        Assert.assertTrue(availabilitySource.contains(
-                "dev.jason.gboardpatches.feature.ai_writing_tools"));
-        Assert.assertTrue(availabilitySource.contains("FEATURE_ZHUYIN_BOTTOM_ROW_WEIGHT"));
-        Assert.assertTrue(availabilitySource.contains(
-                "dev.jason.gboardpatches.feature.zhuyin_bottom_row_weight"));
         Assert.assertTrue(patchSource.contains(
                 "gboardLatinGlobeKeyIgnoreIntervalFeatureMarkerPatch"));
         Assert.assertTrue(patchSource.contains(
                 "gboardEnglishUppercaseToggleFeatureMarkerPatch"));
-        Assert.assertTrue(patchSource.contains("gboardAiWritingToolsFeatureMarkerPatch"));
         Assert.assertTrue(patchSource.contains(
-                "gboardZhuyinBottomRowWeightFeatureMarkerPatch"));
+                "gboardFlickUpCompleteFeatureMarkerPatch"));
     }
 
     @Test

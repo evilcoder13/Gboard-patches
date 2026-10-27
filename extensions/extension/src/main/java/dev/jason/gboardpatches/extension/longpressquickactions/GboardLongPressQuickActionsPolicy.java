@@ -80,10 +80,6 @@ public final class GboardLongPressQuickActionsPolicy {
                 ? action.shortcut : null;
     }
 
-    public static boolean isZhuyinKeyId(int keyId) {
-        return keyId >= 0x7f0b28b9 && keyId <= 0x7f0b28e5;
-    }
-
     private static QuickAction resolve(int keyId, String pressText) {
         if (pressText == null) {
             return null;
@@ -101,12 +97,6 @@ public final class GboardLongPressQuickActionsPolicy {
             case 0x7f0b18a3 -> "V".equals(pressText) ? PASTE : null;
             case 0x7f0b1a06 -> "y".equals(pressText) ? REDO : null;
             case 0x7f0b18a9 -> "Y".equals(pressText) ? REDO : null;
-            case 0x7f0b28d1 -> "a".equals(pressText) ? SELECT_ALL : null;
-            case 0x7f0b28c8 -> "z".equals(pressText) ? UNDO : null;
-            case 0x7f0b28cb -> "c".equals(pressText) ? COPY : null;
-            case 0x7f0b28d0 -> "x".equals(pressText) ? CUT : null;
-            case 0x7f0b28e2 -> "v".equals(pressText) ? PASTE : null;
-            case 0x7f0b28e4 -> "y".equals(pressText) ? REDO : null;
             default -> null;
         };
     }

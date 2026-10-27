@@ -188,7 +188,7 @@ internal object GboardVersionBindings {
 
         val projection = TargetBindingCompiler.compile(profile, requirements)
         assertEquals("18.5.4", projection.targetVersion)
-        assertEquals(203, profileBindings.size())
+        assertEquals(124, profileBindings.size())
         assertEquals(AUTHORITATIVE_SOURCE_SHA256, projection.sourceSha256)
         assertEquals(
             requirements.keys,
@@ -296,7 +296,7 @@ internal object GboardVersionBindings {
 
     private companion object {
         const val AUTHORITATIVE_SOURCE_SHA256 =
-            "687aa19d4956ab311ed18b8d12e6897d919bdcbdc89ddf83f6b34a204b2de090"
+            "af1fdf5199e77c243eb06180fc9ccddd325195d255035de301a2e5ed25913fcd"
         val BINDINGS_PATH = Path.of("src/main/resources/gboard/gboard-version-bindings.json")
         val BINDINGS_SCHEMA_PATH =
             Path.of("src/main/resources/gboard/gboard-version-bindings.schema.json")

@@ -9,14 +9,12 @@ class GboardGestureFamilySelectionStoreTest {
     fun `take returns each selected feature once and removes the context`() {
         val store = GboardGestureFamilySelectionStore<Any>()
         val context = Any()
-        store.add(context, GboardGestureFamilyFeature.TOP_ROW_SWIPE)
-        store.add(context, GboardGestureFamilyFeature.TOP_ROW_SWIPE)
-        store.add(context, GboardGestureFamilyFeature.ZHUYIN_TOGGLE)
+        store.add(context, GboardGestureFamilyFeature.LONG_PRESS_QUICK_ACTIONS)
+        store.add(context, GboardGestureFamilyFeature.LONG_PRESS_QUICK_ACTIONS)
 
         assertEquals(
             listOf(
-                GboardGestureFamilyFeature.TOP_ROW_SWIPE,
-                GboardGestureFamilyFeature.ZHUYIN_TOGGLE,
+                GboardGestureFamilyFeature.LONG_PRESS_QUICK_ACTIONS,
             ),
             store.take(context).toList(),
         )

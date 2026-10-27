@@ -56,9 +56,6 @@ final class GboardGlobeDragAdapter implements GboardGlobeDragPort {
             return;
         }
         int keyId = handles.extractKeyId(metadata);
-        if (GboardLongPressQuickActionsPolicy.isZhuyinKeyId(keyId)) {
-            return;
-        }
         String viewEntryName;
         try {
             viewEntryName = view.getResources().getResourceEntryName(view.getId());
@@ -114,10 +111,6 @@ final class GboardGlobeDragAdapter implements GboardGlobeDragPort {
 
     @Override
     public TargetSignal inspectPointerTarget(Object softKeyView, Object metadata) throws Throwable {
-        if (GboardLongPressQuickActionsPolicy.isZhuyinKeyId(
-                handles.extractKeyId(metadata))) {
-            return inspectPointerTarget(null, metadata);
-        }
         String viewEntryName = null;
         if (softKeyView instanceof View view) {
             viewEntryName = view.getResources().getResourceEntryName(view.getId());
@@ -129,19 +122,12 @@ final class GboardGlobeDragAdapter implements GboardGlobeDragPort {
         int keyId = handles.extractKeyId(metadata);
         String pressText = handles.extractPressText(metadata);
         int pressCarrier = handles.extractPressCarrierCode(metadata);
-        GboardGlobeDragPhysicalSlotPolicy.ShortcutSlot physicalSlot = null;
-        GboardEditingShortcutPolicy.Shortcut shortcut;
-        if (GboardLongPressQuickActionsPolicy.isZhuyinKeyId(keyId)) {
-            shortcut = GboardLongPressQuickActionsPolicy.shortcutForPointerTarget(
-                    keyId, pressText, pressCarrier, TYPING_PULSE_KEY_CODE);
-        } else {
-            physicalSlot = shortcutSlot(viewEntryName);
-            shortcut = GboardGlobeDragPhysicalSlotPolicy.resolve(
-                    physicalSlot,
-                    pressText,
-                    pressCarrier,
-                    TYPING_PULSE_KEY_CODE);
-        }
+        GboardGlobeDragPhysicalSlotPolicy.ShortcutSlot physicalSlot = shortcutSlot(viewEntryName);
+        GboardEditingShortcutPolicy.Shortcut shortcut = GboardGlobeDragPhysicalSlotPolicy.resolve(
+                physicalSlot,
+                pressText,
+                pressCarrier,
+                TYPING_PULSE_KEY_CODE);
         return new TargetSignal(
                 metadata,
                 physicalSlot,
@@ -163,31 +149,18 @@ final class GboardGlobeDragAdapter implements GboardGlobeDragPort {
         int keyId = handles.extractKeyId(metadata);
         String pressText = handles.extractPressText(metadata);
         int pressCarrier = handles.extractPressCarrierCode(metadata);
-        boolean zhuyinKey = GboardLongPressQuickActionsPolicy.isZhuyinKeyId(keyId);
-        GboardEditingShortcutPolicy.Shortcut zhuyinShortcut = zhuyinKey
-                ? GboardLongPressQuickActionsPolicy.shortcutForChord(
-                    keyId,
-                    pressText,
-                    selectedCode,
-                    TYPING_PULSE_KEY_CODE,
-                    PLAIN_TEXT_KEY_CODE)
-                : null;
-        GboardGlobeDragPhysicalSlotPolicy.ShortcutSlot boundSlot = zhuyinKey
-                ? null
-                : BOUND_SLOTS.resolveSlot(
-                    metadata,
-                    keyId,
-                    pressText,
-                    pressCarrier,
-                    TYPING_PULSE_KEY_CODE);
-        GboardEditingShortcutPolicy.Shortcut boundSlotShortcut =
+        GboardGlobeDragPhysicalSlotPolicy.ShortcutSlot boundSlot = BOUND_SLOTS.resolveSlot(
+                metadata,
+                keyId,
+                pressText,
+                pressCarrier,
+                TYPING_PULSE_KEY_CODE);
+        GboardEditingShortcutPolicy.Shortcut shortcut =
                 GboardGlobeDragPhysicalSlotPolicy.resolve(
                     boundSlot,
                     pressText,
                     pressCarrier,
                     TYPING_PULSE_KEY_CODE);
-        GboardEditingShortcutPolicy.Shortcut shortcut = resolveTerminalShortcut(
-                zhuyinKey, zhuyinShortcut, boundSlotShortcut);
         return new TargetSignal(
                 metadata, boundSlot,
                 keyId, pressText, entryPayload, shortcut, pressText != null);

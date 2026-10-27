@@ -37,14 +37,13 @@ public final class GboardAdvancedVoiceSettingsSourceTest {
                         + "(colorful microphone), and Rambler."));
         Assert.assertTrue(settingsText.contains(
                 "語音輸入分為三種：標準、標準-進階功能（彩色麥克風）以及 Rambler。"));
-        Assert.assertEquals(2, count(feature,
+        Assert.assertEquals(0, count(feature,
                 "new GboardPatchesSettingsContract.ToggleRow("));
         Assert.assertEquals(0, count(feature,
                 "new GboardPatchesSettingsContract.SelectorRow("));
         Assert.assertFalse(feature.contains("GboardAdvancedVoiceSettings.readBackend("));
         Assert.assertFalse(feature.contains("showBackendDialog("));
         Assert.assertFalse(feature.contains("saveBackend("));
-        Assert.assertTrue(feature.contains("refreshSafely("));
         Assert.assertFalse(feature.contains("BACKEND_RAMBLER"));
         Assert.assertTrue(feature.contains(
                 "new GboardPatchesSettingsContract.DetailRow("));

@@ -31,10 +31,10 @@ class GboardContributionWiringTest {
     @Test
     fun `independent execution units can be admitted without sibling mutations`() {
         assertEquals(
-            setOf("zhuyin_slide_input.soft_key"),
+            setOf("enable_split_keyboard.mode"),
             GboardContributionWiring.activeContributionIds(
-                "zhuyin_slide_input",
-                setOf("zhuyin_slide_input.soft_key"),
+                "enable_split_keyboard",
+                setOf("enable_split_keyboard.mode"),
             ),
         )
         assertEquals(
@@ -50,8 +50,8 @@ class GboardContributionWiringTest {
     fun `indivisible shared patch stages fail closed when partially admitted`() {
         assertThrows(IllegalStateException::class.java) {
             GboardContributionWiring.activeContributionIds(
-                "swipeable_custom_top_row",
-                setOf("swipeable_custom_top_row.soft_key"),
+                "clipboard_enhancements",
+                setOf("clipboard_enhancements.layout_hook"),
             )
         }
     }

@@ -4,7 +4,6 @@ import com.google.gson.JsonParser
 import dev.jason.gboardpatches.patches.gboard.features.advancedvoice.gboardAdvancedVoice1803ZhTwPatch
 import dev.jason.gboardpatches.patches.gboard.features.advancedvoice.gboardAdvancedVoiceFeatureMarkerPatch
 import dev.jason.gboardpatches.patches.gboard.features.advancedvoice.gboardAdvancedVoiceFlagValuePatch
-import dev.jason.gboardpatches.patches.gboard.features.rambler.gboardRambler1803OfficialSelectorPatch
 import dev.jason.gboardpatches.patches.gboard.shared.gboardPatchesSettingsPatch
 import dev.jason.gboardpatches.patches.gboard.shared.generated.GboardTargetAdmission
 import java.nio.charset.StandardCharsets
@@ -47,7 +46,6 @@ class GboardAdvancedVoicePatchContractTest {
                 gboardAdvancedVoiceFeatureMarkerPatch,
                 gboardAdvancedVoiceFlagValuePatch,
                 gboardAdvancedVoice1803ZhTwPatch,
-                gboardRambler1803OfficialSelectorPatch,
             ),
             gboardAdvancedVoiceTypingPatch.dependencies.toList(),
         )
@@ -64,19 +62,6 @@ class GboardAdvancedVoicePatchContractTest {
             "voice_native_readiness" to "Lssi;->a()Z",
             "voice_eligibility_constructor" to
                 "Lssx;-><init>(Landroid/content/Context;Ltwj;Luym;Lsjt;Ltwj;Ltwj;Ltcy;Ltwj;Ltdf;Lsyl;Llez;Lsxs;Lsya;Lvec;Lszj;Ltdj;Ltfh;Lsiy;Lstm;Lssl;Ltwj;Laclu;Ljava/util/Set;)V",
-            "voice_mdd_constructor" to "Lsjt;-><init>(Landroid/content/Context;Lsju;Lsjo;Laclu;)V",
-            "voice_formatter_constructor" to
-                "Lsmo;-><init>(Ljava/util/Locale;Letg;Lszc;IZLsmr;Ltey;Lvec;Ljava/util/concurrent/Executor;)V",
-            "rambler_selector_layout" to
-                "Lcom/google/android/apps/inputmethod/latin/preference/VoiceSettingsFragment;->aC()I",
-            "rambler_selector_setup" to
-                "Lcom/google/android/apps/inputmethod/latin/preference/VoiceSettingsFragment;->ac()V",
-            "rambler_selector_create" to
-                "Lcom/google/android/apps/inputmethod/latin/preference/VoiceSettingsFragment;->f(Landroid/os/Bundle;)V",
-            "rambler_selector_default" to "Lfhv;->hU()V",
-            "rambler_selector_read" to "Lnca;->a(Landroid/content/Context;)Z",
-            "rambler_selector_write" to
-                "Lcom/google/android/apps/inputmethod/latin/preference/VoiceSettingsFragment;->aE(ZLqvt;Lcom/google/android/libraries/inputmethod/preferencewidgets/CustomSelectorWithWidgetPreference;Lcom/google/android/libraries/inputmethod/preferencewidgets/CustomSelectorWithWidgetPreference;)V",
         )
         expected.forEach { (key, descriptor) ->
             val binding = bindings.getAsJsonObject(key)

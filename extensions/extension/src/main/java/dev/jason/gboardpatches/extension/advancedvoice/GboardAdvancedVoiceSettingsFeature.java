@@ -228,14 +228,6 @@ public final class GboardAdvancedVoiceSettingsFeature
                     enabled,
                     value -> saveEnabled(host, context, value))
                     .setRestartRequired(GboardAdvancedVoiceSettings.PREF_KEY_ENABLED));
-            behaviorRows.add(new GboardPatchesSettingsContract.ToggleRow(
-                    zhTwPunctuationTitle,
-                    zhTwPunctuationSummary,
-                    enabled,
-                    zhTwPunctuationEnabled,
-                    value -> saveZhTwPunctuationEnabled(context, value))
-                    .setRestartRequired(
-                            GboardAdvancedVoiceSettings.PREF_KEY_ZH_TW_PUNCTUATION_ENABLED));
 
             List<GboardPatchesSettingsContract.Row> informationRows =
                     new ArrayList<GboardPatchesSettingsContract.Row>();

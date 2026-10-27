@@ -32,7 +32,6 @@ public final class GboardClipboardSettingsFeature
     private static final String FALLBACK_SECTION_METADATA = "Metadata";
     private static final String FALLBACK_SECTION_LAYOUT = "Layout";
     private static final String FALLBACK_SECTION_RETENTION = "Retention";
-    private static final String FALLBACK_SECTION_EXTENSIONS = "Extensions";
 
     private final GboardClipboardMetadataSettingsSection metadataSection =
             new GboardClipboardMetadataSettingsSection();
@@ -42,8 +41,6 @@ public final class GboardClipboardSettingsFeature
             new GboardClipboardRetentionSettingsSection();
     private final GboardClipboardContentLimitSettingsRow contentLimitSettingsRow =
             new GboardClipboardContentLimitSettingsRow();
-    private final GboardWebClipboardSettingsFeature webClipboardFeature =
-            new GboardWebClipboardSettingsFeature();
 
     private String headerBadge = FALLBACK_HEADER_BADGE;
     private String entryTitle = FALLBACK_ENTRY_TITLE;
@@ -54,7 +51,6 @@ public final class GboardClipboardSettingsFeature
     private String sectionMetadata = FALLBACK_SECTION_METADATA;
     private String sectionLayout = FALLBACK_SECTION_LAYOUT;
     private String sectionRetention = FALLBACK_SECTION_RETENTION;
-    private String sectionExtensions = FALLBACK_SECTION_EXTENSIONS;
 
     @Override
     public String getEntryTitle() {
@@ -76,23 +72,13 @@ public final class GboardClipboardSettingsFeature
         return "amber";
     }
 
-    public GboardPatchesSettingsContract.Feature getWebClipboardFeature() {
-        return webClipboardFeature;
-    }
-
-    @Override
-    public List<GboardPatchesSettingsContract.Feature> getNavigationChildren() {
-        return Collections.singletonList(webClipboardFeature);
-    }
-
     @Override
     public boolean isAvailable(Context context) {
         initializeText(context);
         return GboardPatchesFeatureAvailability.hasAnyFeature(
                 context,
                 GboardPatchesFeatureAvailability.FEATURE_CLIPBOARD_ENHANCEMENTS,
-                GboardPatchesFeatureAvailability.FEATURE_CLIPBOARD_CONTENT_LIMIT,
-                GboardPatchesFeatureAvailability.FEATURE_WEB_CLIPBOARD);
+                GboardPatchesFeatureAvailability.FEATURE_CLIPBOARD_CONTENT_LIMIT);
     }
 
     @Override
@@ -114,9 +100,6 @@ public final class GboardClipboardSettingsFeature
                     ? GboardPatchesFeatureAvailability.hasFeature(
                             context,
                             GboardPatchesFeatureAvailability.FEATURE_CLIPBOARD_CONTENT_LIMIT)
-                    : true;
-            boolean hasWebClipboard = canQueryAvailability
-                    ? webClipboardFeature.isAvailable(context)
                     : true;
             List<GboardPatchesSettingsContract.Section> sections =
                     new ArrayList<GboardPatchesSettingsContract.Section>();
@@ -193,19 +176,6 @@ public final class GboardClipboardSettingsFeature
                 contentLimitSettingsRow.appendRow(retentionRows, host);
                 sections.add(new GboardPatchesSettingsContract.Section(
                         sectionRetention, retentionRows));
-            }
-
-            if (hasWebClipboard) {
-                List<GboardPatchesSettingsContract.Row> extensionRows =
-                        new ArrayList<GboardPatchesSettingsContract.Row>();
-                extensionRows.add(new GboardPatchesSettingsContract.NavigationRow(
-                        webClipboardFeature.getEntryTitle(),
-                        webClipboardFeature.getHostedEntrySummary(context, preferences),
-                        true,
-                        () -> GboardPatchesSettingsContract.openFeature(host, webClipboardFeature)));
-                sections.add(new GboardPatchesSettingsContract.Section(
-                        sectionExtensions,
-                        extensionRows));
             }
 
             if (sections.isEmpty()) {
@@ -290,9 +260,6 @@ public final class GboardClipboardSettingsFeature
         sectionRetention = GboardSettingsText.get(
                 context,
                 R.string.gboard_patches_clipboard_section_retention);
-        sectionExtensions = GboardSettingsText.get(
-                context,
-                R.string.gboard_patches_clipboard_section_extensions);
     }
 
     private boolean canQueryFeatureAvailability(Context context) {

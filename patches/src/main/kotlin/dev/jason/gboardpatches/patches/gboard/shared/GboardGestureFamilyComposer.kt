@@ -19,19 +19,14 @@ import dev.jason.gboardpatches.patches.gboard.shared.runtimeabi.RuntimeCallId
 import dev.jason.gboardpatches.patches.shared.Constants.COMPATIBILITY_GBOARD
 import java.util.WeakHashMap
 
-private const val TOP_ROW_HELPER_NAME = "jasondevDispatchWithTopRow"
-private const val TOGGLE_HELPER_NAME = "jasondevDispatchOrToggle"
 private const val LONG_PRESS_HELPER_NAME = "jasondevDispatchGlobeDrag"
-private val GESTURE_HELPER_NAMES =
-    setOf(LONG_PRESS_HELPER_NAME, TOP_ROW_HELPER_NAME, TOGGLE_HELPER_NAME)
+private val GESTURE_HELPER_NAMES = setOf(LONG_PRESS_HELPER_NAME)
 private val GESTURE_HELPER_ACCESS_FLAGS = AccessFlags.PRIVATE.value or AccessFlags.FINAL.value
 private val GESTURE_TARGET_ACCESS_FLAGS = AccessFlags.PUBLIC.value or AccessFlags.FINAL.value
 private val GESTURE_STOCK_FIELD_ACCESS_FLAGS = AccessFlags.PUBLIC.value or AccessFlags.FINAL.value
 
 internal enum class GboardGestureFamilyFeature {
     LONG_PRESS_QUICK_ACTIONS,
-    TOP_ROW_SWIPE,
-    ZHUYIN_TOGGLE,
 }
 
 private sealed interface GestureOperand {
@@ -53,39 +48,6 @@ private enum class GboardGestureFamilyStage(
             GestureOperand.Parameter(0),
             GestureOperand.Parameter(1),
             GestureOperand.Parameter(2),
-            GestureOperand.Parameter(3),
-        ),
-    ),
-    TOP_ROW_SWIPE(
-        feature = GboardGestureFamilyFeature.TOP_ROW_SWIPE,
-        order = 100,
-        call = RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_MAYBE_CONSUME_TOP_ROW_SWIPE,
-        operands = listOf(
-            GestureOperand.Receiver,
-            GestureOperand.Parameter(0),
-            GestureOperand.Parameter(1),
-            GestureOperand.Parameter(3),
-        ),
-    ),
-    QUICK_JS_TOP_ROW_PRESS(
-        feature = GboardGestureFamilyFeature.TOP_ROW_SWIPE,
-        order = 200,
-        call = RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_MAYBE_CONSUME_QUICK_JS_TOP_ROW_PRESS,
-        operands = listOf(
-            GestureOperand.Receiver,
-            GestureOperand.Parameter(0),
-            GestureOperand.Parameter(1),
-            GestureOperand.Parameter(2),
-            GestureOperand.Parameter(3),
-        ),
-    ),
-    ZHUYIN_TOGGLE(
-        feature = GboardGestureFamilyFeature.ZHUYIN_TOGGLE,
-        order = 300,
-        call = RuntimeCallId.ZHUYIN_TRADITIONAL_SIMPLIFIED_TOGGLE_RUNTIME_MAYBE_TOGGLE,
-        operands = listOf(
-            GestureOperand.Receiver,
-            GestureOperand.Parameter(1),
             GestureOperand.Parameter(3),
         ),
     ),
@@ -376,24 +338,11 @@ private fun MutableClass.applySelectedGestureFamily(
     selected: Set<GboardGestureFamilyFeature>,
     layout: GestureRegisterLayout,
 ) {
-    if (GboardGestureFamilyFeature.ZHUYIN_TOGGLE in selected) {
-        addGestureHelper(TOGGLE_HELPER_NAME, layout, renderToggleHelperBody(layout))
-    }
-    if (GboardGestureFamilyFeature.TOP_ROW_SWIPE in selected) {
-        addGestureHelper(
-            TOP_ROW_HELPER_NAME,
-            layout,
-            renderTopRowHelperBody(
-                layout = layout,
-                includeToggle = GboardGestureFamilyFeature.ZHUYIN_TOGGLE in selected,
-            ),
-        )
-    }
     if (GboardGestureFamilyFeature.LONG_PRESS_QUICK_ACTIONS in selected) {
         addGestureHelper(
             LONG_PRESS_HELPER_NAME,
             layout,
-            renderLongPressHelperBody(selected, layout),
+            renderLongPressHelperBody(layout),
         )
     }
 
@@ -402,24 +351,10 @@ private fun MutableClass.applySelectedGestureFamily(
 }
 
 private fun renderLongPressHelperBody(
-    selected: Set<GboardGestureFamilyFeature>,
     layout: GestureRegisterLayout,
 ): String {
     val stage = GboardGestureFamilyStage.LONG_PRESS_QUICK_ACTIONS
-    val nextHelper = when {
-        GboardGestureFamilyFeature.TOP_ROW_SWIPE in selected -> TOP_ROW_HELPER_NAME
-        GboardGestureFamilyFeature.ZHUYIN_TOGGLE in selected -> TOGGLE_HELPER_NAME
-        else -> null
-    }
-    val continuation = if (nextHelper == null) {
-        renderStockGestureDispatch(layout)
-    } else {
-        """
-            invoke-direct/range {p0 .. p${layout.rangeEndParameterRegister}}, ${GboardVersionBindings.gestureDispatch.referenceNamed(nextHelper)}
-
-            return-void
-        """.trimIndent()
-    }
+    val continuation = renderStockGestureDispatch(layout)
     return """
         ${emitGestureRuntimeCall(stage.call, layout.render(stage.operands))}
 
@@ -461,65 +396,6 @@ private fun renderGestureOwnerWrapper(
     """.trimIndent()
 }
 
-private fun renderTopRowHelperBody(
-    layout: GestureRegisterLayout,
-    includeToggle: Boolean,
-): String {
-    val stages = GboardGestureFamilyStage.entries.filter { stage ->
-        stage.feature == GboardGestureFamilyFeature.TOP_ROW_SWIPE
-    }.sortedBy(GboardGestureFamilyStage::order)
-    val swipe = stages[0]
-    val quickJs = stages[1]
-    val continuationLabel = if (includeToggle) ":cond_dispatch_or_toggle" else ":cond_dispatch_stock"
-    val continuation = if (includeToggle) {
-        """
-            invoke-direct/range {p0 .. p${layout.rangeEndParameterRegister}}, ${GboardVersionBindings.gestureDispatch.referenceNamed(TOGGLE_HELPER_NAME)}
-
-            return-void
-        """.trimIndent()
-    } else {
-        renderStockGestureDispatch(layout)
-    }
-
-    return """
-        ${emitGestureRuntimeCall(swipe.call, layout.render(swipe.operands))}
-
-        move-result v0
-
-        if-nez v0, :cond_return
-
-        ${emitGestureRuntimeCall(quickJs.call, layout.render(quickJs.operands))}
-
-        move-result v0
-
-        if-eqz v0, $continuationLabel
-
-        :cond_return
-        return-void
-
-        $continuationLabel
-        $continuation
-    """.trimIndent()
-}
-
-private fun renderToggleHelperBody(layout: GestureRegisterLayout): String {
-    val toggle = GboardGestureFamilyStage.entries.single { stage ->
-        stage.feature == GboardGestureFamilyFeature.ZHUYIN_TOGGLE
-    }
-    return """
-        ${emitGestureRuntimeCall(toggle.call, layout.render(toggle.operands))}
-
-        move-result v0
-
-        if-nez v0, :cond_return
-
-        ${renderStockGestureDispatch(layout, includeReturn = false)}
-
-        :cond_return
-        return-void
-    """.trimIndent()
-}
-
 private fun renderStockGestureDispatch(
     layout: GestureRegisterLayout,
     includeReturn: Boolean = true,
@@ -534,12 +410,12 @@ private fun renderStockGestureDispatch(
     if (includeReturn) append("\n\nreturn-void")
 }
 
-private fun Set<GboardGestureFamilyFeature>.entryHelperName(): String =
-    when {
-        GboardGestureFamilyFeature.LONG_PRESS_QUICK_ACTIONS in this -> LONG_PRESS_HELPER_NAME
-        GboardGestureFamilyFeature.TOP_ROW_SWIPE in this -> TOP_ROW_HELPER_NAME
-        else -> TOGGLE_HELPER_NAME
+private fun Set<GboardGestureFamilyFeature>.entryHelperName(): String {
+    check(GboardGestureFamilyFeature.LONG_PRESS_QUICK_ACTIONS in this) {
+        "No Gesture-family entry helper selected"
     }
+    return LONG_PRESS_HELPER_NAME
+}
 
 private fun MutableClass.verifyExactGestureFamilyState(
     selected: Set<GboardGestureFamilyFeature>,
@@ -550,8 +426,6 @@ private fun MutableClass.verifyExactGestureFamilyState(
         if (GboardGestureFamilyFeature.LONG_PRESS_QUICK_ACTIONS in selected) {
             add(LONG_PRESS_HELPER_NAME)
         }
-        if (GboardGestureFamilyFeature.TOP_ROW_SWIPE in selected) add(TOP_ROW_HELPER_NAME)
-        if (GboardGestureFamilyFeature.ZHUYIN_TOGGLE in selected) add(TOGGLE_HELPER_NAME)
     }
     val actualHelpers = methods.filter { method -> method.name in GESTURE_HELPER_NAMES }
     check(actualHelpers.mapTo(linkedSetOf()) { method -> method.name } == expectedHelperNames) {

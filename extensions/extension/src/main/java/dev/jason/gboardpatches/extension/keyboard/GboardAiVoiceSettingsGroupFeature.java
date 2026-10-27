@@ -12,7 +12,6 @@ import dev.jason.gboardpatches.extension.settings.GboardFeatureGroup;
 import dev.jason.gboardpatches.extension.settings.GboardPatchesIcons;
 import dev.jason.gboardpatches.extension.settings.GboardPatchesSettingsContract;
 import dev.jason.gboardpatches.extension.settings.GboardSettingsText;
-import dev.jason.gboardpatches.extension.writingtools.GboardAiWritingToolsSettingsFeature;
 
 public final class GboardAiVoiceSettingsGroupFeature
         implements GboardPatchesSettingsContract.Feature {
@@ -30,7 +29,6 @@ public final class GboardAiVoiceSettingsGroupFeature
                 GboardSettingsText.get(context,
                         R.string.gboard_patches_group_keyboard_empty_summary),
                 Arrays.asList(
-                        new GboardAiWritingToolsSettingsFeature(context),
                         new GboardAdvancedVoiceSettingsFeature(context),
                         new GboardBluetoothMicrophoneSettingsFeature(context)));
     }

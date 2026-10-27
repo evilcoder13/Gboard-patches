@@ -26,41 +26,11 @@ internal enum class GboardSoftKeyFamilyFeature(
     val beforeRuntimeCalls: List<RuntimeCallId> = emptyList(),
     val afterRuntimeCalls: List<RuntimeCallId> = emptyList(),
 ) {
-    ZHUYIN_TOGGLE(
-        beforeOrder = 100,
-        afterOrder = 400,
-        beforeRuntimeCalls = listOf(
-            RuntimeCallId.ZHUYIN_TRADITIONAL_SIMPLIFIED_TOGGLE_RUNTIME_PATCH_INCOMING_SOFT_KEY_METADATA,
-        ),
-        afterRuntimeCalls = listOf(
-            RuntimeCallId.ZHUYIN_TRADITIONAL_SIMPLIFIED_TOGGLE_RUNTIME_AFTER_SOFT_KEY_BOUND,
-        ),
-    ),
-    TOP_ROW_SWIPE(
-        beforeOrder = 200,
-        afterOrder = 200,
-        beforeRuntimeCalls = listOf(
-            RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_PATCH_INCOMING_SOFT_KEY_METADATA,
-        ),
-        afterRuntimeCalls = listOf(
-            RuntimeCallId.TOP_ROW_SWIPE_RUNTIME_AFTER_SOFT_KEY_BOUND,
-        ),
-    ),
     LONG_PRESS_QUICK_ACTIONS(
         beforeOrder = 300,
         afterOrder = null,
         beforeRuntimeCalls = listOf(
             RuntimeCallId.LONG_PRESS_QUICK_ACTIONS_RUNTIME_MAYBE_PATCH_METADATA,
-        ),
-    ),
-    SPACEBAR_LOGO(
-        beforeOrder = 400,
-        afterOrder = 100,
-        beforeRuntimeCalls = listOf(
-            RuntimeCallId.SPACEBAR_LOGO_RUNTIME_BEFORE_SOFT_KEY_BOUND,
-        ),
-        afterRuntimeCalls = listOf(
-            RuntimeCallId.SPACEBAR_LOGO_RUNTIME_AFTER_SOFT_KEY_BOUND,
         ),
     ),
     ENGLISH_QWERTY(
@@ -71,27 +41,6 @@ internal enum class GboardSoftKeyFamilyFeature(
             RuntimeCallId.ENGLISH_UPPERCASE_TOGGLE_RUNTIME_GET_CACHED_PATCHED_METADATA,
             RuntimeCallId.ENGLISH_UPPERCASE_TOGGLE_RUNTIME_IS_ENABLED,
             RuntimeCallId.ENGLISH_UPPERCASE_TOGGLE_RUNTIME_IS_PATCHED_METADATA,
-        ),
-    ),
-    ZHUYIN_SLIDE(
-        beforeOrder = 600,
-        afterOrder = null,
-        beforeRuntimeCalls = listOf(
-            RuntimeCallId.ZHUYIN_SLIDE_RUNTIME_PATCH_INCOMING_SOFT_KEY_METADATA,
-        ),
-    ),
-    CUSTOM_SYMBOLS(
-        beforeOrder = 700,
-        afterOrder = null,
-        beforeRuntimeCalls = listOf(
-            RuntimeCallId.ADD_SYMBOLS_SOFT_KEY_RUNTIME_PATCH_SOFT_KEY_METADATA,
-        ),
-    ),
-    ZHUYIN_BOTTOM_ROW(
-        beforeOrder = null,
-        afterOrder = 300,
-        afterRuntimeCalls = listOf(
-            RuntimeCallId.ZHUYIN_BOTTOM_ROW_WEIGHT_RUNTIME_AFTER_SOFT_KEY_BOUND,
         ),
     ),
     ;
@@ -335,34 +284,18 @@ internal fun MutableMethod.applySelectedSoftKeyFamily(
 }
 
 internal fun GboardSoftKeyFamilyFeature.beforeDelegate(): String = when (this) {
-    GboardSoftKeyFamilyFeature.ZHUYIN_TOGGLE,
-    GboardSoftKeyFamilyFeature.TOP_ROW_SWIPE,
-    GboardSoftKeyFamilyFeature.ZHUYIN_SLIDE,
-    GboardSoftKeyFamilyFeature.CUSTOM_SYMBOLS,
-    -> metadataTransformDelegate(beforeRuntimeCalls.single(), "p0, p1")
     GboardSoftKeyFamilyFeature.LONG_PRESS_QUICK_ACTIONS ->
         metadataTransformDelegate(beforeRuntimeCalls.single(), "p1, p0")
-    GboardSoftKeyFamilyFeature.SPACEBAR_LOGO ->
-        emitSoftKeyRuntimeCall(beforeRuntimeCalls.single(), "p0, p1")
     GboardSoftKeyFamilyFeature.ENGLISH_QWERTY -> """
         invoke-direct {p0, p1}, ${GboardVersionBindings.softKeyBind.ownerDescriptor}->
             jasondevPatchIncomingMetadata(${GboardVersionBindings.softKeyMetadataType.descriptor})${GboardVersionBindings.softKeyMetadataType.descriptor}
 
         move-result-object p1
     """.trimIndent().replace("->\n            ", "->")
-    GboardSoftKeyFamilyFeature.ZHUYIN_BOTTOM_ROW ->
-        emitSoftKeyRuntimeCall(beforeRuntimeCalls.single(), "p0")
 }
 
-internal fun GboardSoftKeyFamilyFeature.afterDelegate(): String = when (this) {
-    GboardSoftKeyFamilyFeature.SPACEBAR_LOGO ->
-        emitSoftKeyRuntimeCall(afterRuntimeCalls.single(), "p0, p1")
-    GboardSoftKeyFamilyFeature.TOP_ROW_SWIPE,
-    GboardSoftKeyFamilyFeature.ZHUYIN_BOTTOM_ROW,
-    GboardSoftKeyFamilyFeature.ZHUYIN_TOGGLE,
-    -> emitSoftKeyRuntimeCall(afterRuntimeCalls.single(), "p0")
-    else -> error("$this has no after-stock contribution")
-}
+internal fun GboardSoftKeyFamilyFeature.afterDelegate(): String =
+    error("$this has no after-stock contribution")
 
 private fun metadataTransformDelegate(call: RuntimeCallId, registers: String): String = """
     ${emitSoftKeyRuntimeCall(call, registers)}
@@ -441,8 +374,6 @@ private fun MutableMethod.stripExpectedSoftKeyFamilySlots(
 private fun GboardSoftKeyFamilyFeature.beforeInstructionCount(): Int = when {
     beforeOrder == null -> 0
     this == GboardSoftKeyFamilyFeature.ENGLISH_QWERTY -> 2
-    this == GboardSoftKeyFamilyFeature.SPACEBAR_LOGO -> 1
-    this == GboardSoftKeyFamilyFeature.ZHUYIN_BOTTOM_ROW -> 1
     else -> 3
 }
 

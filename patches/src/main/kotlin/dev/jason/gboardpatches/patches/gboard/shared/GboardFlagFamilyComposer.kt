@@ -43,39 +43,14 @@ internal enum class GboardFlagFamilyFeature(
         RuntimeCallId.INLINE_SUGGESTIONS_RUNTIME_APPLY_FLAG_VALUE,
         GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
     ),
-    KEY_SHAPE_SELECTION(
-        40,
-        RuntimeCallId.KEY_SHAPE_SELECTION_RUNTIME_APPLY_FLAG_VALUE,
-        GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
-    ),
-    ACCESS_POINTS_MENU_STYLE(
-        100,
-        RuntimeCallId.ACCESS_POINTS_MENU_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-        GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
-    ),
     ADVANCED_VOICE_TYPING(
         200,
         RuntimeCallId.ADVANCED_VOICE_RUNTIME_AFTER_FLAG_VALUE,
         GboardFlagFamilyArgumentShape.RECEIVER_AND_RESULT,
     ),
-    AI_WRITING_TOOLS(
-        300,
-        RuntimeCallId.AI_WRITING_TOOLS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-        GboardFlagFamilyArgumentShape.RECEIVER_AND_RESULT,
-    ),
-    CHANGE_EMOJI_SIZE(
-        400,
-        RuntimeCallId.EMOJI_SIZE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-        GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
-    ),
     CLIPBOARD_CUSTOM_CHARACTER_LIMIT(
         500,
         RuntimeCallId.CLIPBOARD_CONTENT_LIMIT_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-        GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
-    ),
-    ENABLE_ACCESSIBILITY_LAYOUT(
-        600,
-        RuntimeCallId.ACCESSIBILITY_LAYOUT_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
         GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
     ),
     ENABLE_CURSOR_TRACKPAD_MODE(
@@ -96,16 +71,6 @@ internal enum class GboardFlagFamilyFeature(
     CLOSE_PROACTIVE_SUGGESTIONS(
         1000,
         RuntimeCallId.CLOSE_PROACTIVE_SUGGESTIONS_RUNTIME_APPLY_FLAG_VALUE,
-        GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
-    ),
-    QUICK_INSERT(
-        1200,
-        RuntimeCallId.QUICK_INSERT_RUNTIME_APPLY_FLAG_VALUE,
-        GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
-    ),
-    ACCESS_POINT_COUNT(
-        1300,
-        RuntimeCallId.ACCESS_POINT_COUNT_RUNTIME_APPLY_FLAG_VALUE,
         GboardFlagFamilyArgumentShape.FLAG_NAME_AND_RESULT,
     ),
     ;
@@ -536,29 +501,10 @@ private fun MethodReference.matches(abi: RuntimeAbi): Boolean =
 private fun String.normalized(): String = uppercase().replace('-', '_').replace('/', '_')
 
 private fun emitFlagFamilyRuntimeCall(call: RuntimeCallId, registers: String): String = when (call) {
-    RuntimeCallId.ACCESS_POINT_COUNT_RUNTIME_APPLY_FLAG_VALUE -> RuntimeCallEmitter.invoke(
-        RuntimeCallId.ACCESS_POINT_COUNT_RUNTIME_APPLY_FLAG_VALUE,
-        registers,
-    )
-    RuntimeCallId.ACCESSIBILITY_LAYOUT_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE ->
-        RuntimeCallEmitter.invoke(
-            RuntimeCallId.ACCESSIBILITY_LAYOUT_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-            registers,
-        )
-    RuntimeCallId.ACCESS_POINTS_MENU_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE ->
-        RuntimeCallEmitter.invoke(
-            RuntimeCallId.ACCESS_POINTS_MENU_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-            registers,
-        )
     RuntimeCallId.ADVANCED_VOICE_RUNTIME_AFTER_FLAG_VALUE -> RuntimeCallEmitter.invoke(
         RuntimeCallId.ADVANCED_VOICE_RUNTIME_AFTER_FLAG_VALUE,
         registers,
     )
-    RuntimeCallId.AI_WRITING_TOOLS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE ->
-        RuntimeCallEmitter.invoke(
-            RuntimeCallId.AI_WRITING_TOOLS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-            registers,
-        )
     RuntimeCallId.BLUETOOTH_MICROPHONE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE ->
         RuntimeCallEmitter.invoke(
             RuntimeCallId.BLUETOOTH_MICROPHONE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
@@ -583,14 +529,6 @@ private fun emitFlagFamilyRuntimeCall(call: RuntimeCallId, registers: String): S
         RuntimeCallId.DEVICE_INTELLIGENCE_RUNTIME_APPLY_FLAG_VALUE,
         registers,
     )
-    RuntimeCallId.EMOJI_SIZE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE -> RuntimeCallEmitter.invoke(
-        RuntimeCallId.EMOJI_SIZE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-        registers,
-    )
-    RuntimeCallId.FEATURE_FLAGS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE -> RuntimeCallEmitter.invoke(
-        RuntimeCallId.FEATURE_FLAGS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-        registers,
-    )
     RuntimeCallId.GRAMMAR_CHECKER_RUNTIME_APPLY_FLAG_VALUE -> RuntimeCallEmitter.invoke(
         RuntimeCallId.GRAMMAR_CHECKER_RUNTIME_APPLY_FLAG_VALUE,
         registers,
@@ -599,16 +537,8 @@ private fun emitFlagFamilyRuntimeCall(call: RuntimeCallId, registers: String): S
         RuntimeCallId.INLINE_SUGGESTIONS_RUNTIME_APPLY_FLAG_VALUE,
         registers,
     )
-    RuntimeCallId.KEY_SHAPE_SELECTION_RUNTIME_APPLY_FLAG_VALUE -> RuntimeCallEmitter.invoke(
-        RuntimeCallId.KEY_SHAPE_SELECTION_RUNTIME_APPLY_FLAG_VALUE,
-        registers,
-    )
     RuntimeCallId.OCR_RUNTIME_APPLY_FLAG_VALUE -> RuntimeCallEmitter.invoke(
         RuntimeCallId.OCR_RUNTIME_APPLY_FLAG_VALUE,
-        registers,
-    )
-    RuntimeCallId.QUICK_INSERT_RUNTIME_APPLY_FLAG_VALUE -> RuntimeCallEmitter.invoke(
-        RuntimeCallId.QUICK_INSERT_RUNTIME_APPLY_FLAG_VALUE,
         registers,
     )
     else -> error("Runtime call $call does not belong to the flag family")
@@ -626,21 +556,13 @@ private const val FORMAL_18_0_3_REGISTER_COUNT = 3
 private const val MAX_MOVE_RESULT_OBJECT_REGISTER = 255
 
 private val ALL_FLAG_FAMILY_RUNTIME_CALLS: Set<RuntimeCallId> = setOf(
-    RuntimeCallId.ACCESS_POINT_COUNT_RUNTIME_APPLY_FLAG_VALUE,
-    RuntimeCallId.ACCESSIBILITY_LAYOUT_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-    RuntimeCallId.ACCESS_POINTS_MENU_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
     RuntimeCallId.ADVANCED_VOICE_RUNTIME_AFTER_FLAG_VALUE,
-    RuntimeCallId.AI_WRITING_TOOLS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
     RuntimeCallId.BLUETOOTH_MICROPHONE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
     RuntimeCallId.CLIPBOARD_CONTENT_LIMIT_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
     RuntimeCallId.CLOSE_PROACTIVE_SUGGESTIONS_RUNTIME_APPLY_FLAG_VALUE,
     RuntimeCallId.CURSOR_TRACKPAD_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
     RuntimeCallId.DEVICE_INTELLIGENCE_RUNTIME_APPLY_FLAG_VALUE,
-    RuntimeCallId.EMOJI_SIZE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
-    RuntimeCallId.FEATURE_FLAGS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE,
     RuntimeCallId.GRAMMAR_CHECKER_RUNTIME_APPLY_FLAG_VALUE,
     RuntimeCallId.INLINE_SUGGESTIONS_RUNTIME_APPLY_FLAG_VALUE,
-    RuntimeCallId.KEY_SHAPE_SELECTION_RUNTIME_APPLY_FLAG_VALUE,
     RuntimeCallId.OCR_RUNTIME_APPLY_FLAG_VALUE,
-    RuntimeCallId.QUICK_INSERT_RUNTIME_APPLY_FLAG_VALUE,
 )

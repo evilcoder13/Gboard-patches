@@ -56,8 +56,7 @@ class GboardOcrPatchContractTest {
                 readme.indexOf("<summary><code>Enable OCR / Scan Text</code></summary>"),
         )
         assertTrue(readme.contains(
-            "Enable the OCR / Scan Text feature with Latin, Chinese, Japanese, Korean, and " +
-                "Devanagari recognition backends.",
+            "Enable the OCR / Scan Text feature with Latin recognition backend (English & Vietnamese).",
         ))
     }
 

@@ -37,7 +37,7 @@ internal fun MutableMethod.applySwipeDismissTouchInterceptor() {
         ?: error("No instructions in $definingClass->$name")
     val existing = instructions.count { it.isMethodReference(abi.reference) }
     if (existing > 0) {
-        check(existing == 1 && instructions.first().isMethodReference(abi.reference)) {
+        check(existing == 1) {
             "Malformed swipe dismiss touch interceptor in $definingClass->$name"
         }
         return

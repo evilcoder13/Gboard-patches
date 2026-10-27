@@ -14,14 +14,8 @@ import org.robolectric.RuntimeEnvironment;
 import java.util.Arrays;
 import java.util.List;
 
-import dev.jason.gboardpatches.extension.accessibilitylayout.GboardAccessibilityLayoutSettings;
-import dev.jason.gboardpatches.extension.accessibilitylayout.GboardAccessibilityLayoutSettingsFeature;
-import dev.jason.gboardpatches.extension.accesspointsmenu.GboardAccessPointsMenuSettings;
-import dev.jason.gboardpatches.extension.accesspointsmenu.GboardAccessPointsMenuSettingsFeature;
 import dev.jason.gboardpatches.extension.cursortrackpad.GboardCursorTrackpadSettings;
 import dev.jason.gboardpatches.extension.cursortrackpad.GboardCursorTrackpadSettingsFeature;
-import dev.jason.gboardpatches.extension.emojisize.GboardEmojiSizeSettings;
-import dev.jason.gboardpatches.extension.emojisize.GboardEmojiSizeSettingsFeature;
 import dev.jason.gboardpatches.extension.keyboard.GboardKeyboardLayoutSettingsGroupFeature;
 import dev.jason.gboardpatches.extension.keyboard.GboardKeyboardToolsSettingsGroupFeature;
 import dev.jason.gboardpatches.extension.settings.GboardPatchesSettings;
@@ -46,20 +40,10 @@ public final class GboardFiveFlagSettingsContractTest {
 
     @Test
     public void defaultsAndPreferenceKeysMatchTheAcceptedContract() {
-        Assert.assertEquals("pref_force_emoji_scale_supported",
-                GboardEmojiSizeSettings.PREF_KEY_ENABLED);
-        Assert.assertTrue(GboardEmojiSizeSettings.DEFAULT_ENABLED);
-        Assert.assertTrue(GboardEmojiSizeSettings.readEnabled(preferences));
-
         Assert.assertEquals("pref_force_cursor_trackpad_mode",
                 GboardCursorTrackpadSettings.PREF_KEY_ENABLED);
         Assert.assertFalse(GboardCursorTrackpadSettings.DEFAULT_ENABLED);
         Assert.assertFalse(GboardCursorTrackpadSettings.readEnabled(preferences));
-
-        Assert.assertEquals("pref_access_points_menu_redesign_enabled",
-                GboardAccessPointsMenuSettings.PREF_KEY_ENABLED);
-        Assert.assertFalse(GboardAccessPointsMenuSettings.DEFAULT_ENABLED);
-        Assert.assertFalse(GboardAccessPointsMenuSettings.readEnabled(preferences));
 
         Assert.assertEquals("pref_force_split_keyboard_enabled",
                 GboardSplitKeyboardSettings.PREF_KEY_ENABLED);
@@ -69,11 +53,6 @@ public final class GboardFiveFlagSettingsContractTest {
                 GboardSplitKeyboardSettings.PREF_KEY_AUTO_SPLIT_ENABLED);
         Assert.assertFalse(GboardSplitKeyboardSettings.DEFAULT_AUTO_SPLIT_ENABLED);
         Assert.assertFalse(GboardSplitKeyboardSettings.readAutoSplitEnabled(preferences));
-
-        Assert.assertEquals("pref_show_accessibility_layout",
-                GboardAccessibilityLayoutSettings.PREF_KEY_ENABLED);
-        Assert.assertTrue(GboardAccessibilityLayoutSettings.DEFAULT_ENABLED);
-        Assert.assertTrue(GboardAccessibilityLayoutSettings.readEnabled(preferences));
     }
 
     @Test
@@ -83,20 +62,6 @@ public final class GboardFiveFlagSettingsContractTest {
                 "Enable cursor trackpad mode",
                 "settings-previews/cursortrackpad/01_cursor_trackpad_mode.png",
                 "settings-previews/cursortrackpad/02_cursor_trackpad_setting.jpg");
-        assertPreview(
-                new GboardAccessPointsMenuSettingsFeature(null),
-                "Enable new Access Points menu style",
-                "settings-previews/accesspointsmenu/03_access_points_legacy.png",
-                "settings-previews/accesspointsmenu/04_access_points_redesigned.png");
-        assertPreview(
-                new GboardEmojiSizeSettingsFeature(null),
-                "Change emoji size",
-                "settings-previews/emojisize/05_emoji_size_setting.jpg");
-        assertPreview(
-                new GboardAccessibilityLayoutSettingsFeature(null),
-                "Show accessibility layout",
-                "settings-previews/accessibilitylayout/06_accessibility_keyboard.png",
-                "settings-previews/accessibilitylayout/07_accessibility_layout_setting.jpg");
         GboardPatchesSettingsContract.Screen splitScreen =
                 new GboardSplitKeyboardSettingsFeature(null).buildScreenForState(
                         true,
@@ -182,13 +147,10 @@ public final class GboardFiveFlagSettingsContractTest {
         context.getApplicationInfo().metaData = markers;
 
         try {
-            List<GboardPatchesSettingsContract.Feature> fiveFlagFeatures = Arrays.asList(
-                    new GboardEmojiSizeSettingsFeature(context),
+            List<GboardPatchesSettingsContract.Feature> flagFeatures = Arrays.asList(
                     new GboardCursorTrackpadSettingsFeature(context),
-                    new GboardAccessPointsMenuSettingsFeature(context),
-                    new GboardSplitKeyboardSettingsFeature(context),
-                    new GboardAccessibilityLayoutSettingsFeature(context));
-            for (GboardPatchesSettingsContract.Feature feature : fiveFlagFeatures) {
+                    new GboardSplitKeyboardSettingsFeature(context));
+            for (GboardPatchesSettingsContract.Feature feature : flagFeatures) {
                 Assert.assertFalse(feature.isAvailable(context));
             }
 
@@ -201,7 +163,7 @@ public final class GboardFiveFlagSettingsContractTest {
                     .map(row -> row.getTitle().toString())
                     .collect(java.util.stream.Collectors.toList());
 
-            for (GboardPatchesSettingsContract.Feature feature : fiveFlagFeatures) {
+            for (GboardPatchesSettingsContract.Feature feature : flagFeatures) {
                 Assert.assertFalse(visibleTitles.contains(feature.getEntryTitle()));
             }
         } finally {

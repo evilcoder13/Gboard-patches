@@ -41,19 +41,13 @@ public final class GboardLongPressQuickActionsPolicyTest {
     }
 
     @Test
-    public void mapsExactZhuyinTargetKeysToActions() throws Exception {
-        assertPlan(0x7f0b28d1, "a", -0x2766, 0x7f0804c1,
-                "Select all", 0x102001f);
-        assertPlan(0x7f0b28c8, "z", -0x273d, 0x7f0804fd,
-                "Undo", 0);
-        assertPlan(0x7f0b28cb, "c", -0x2767, 0x7f08042b,
-                "Copy", 0x1020021);
-        assertPlan(0x7f0b28d0, "x", -0x2769, 0x7f08042c,
-                "Cut", 0x1020020);
-        assertPlan(0x7f0b28e2, "v", -0x2768, 0x7f08042e,
-                "Paste", 0x1020022);
-        assertPlan(0x7f0b28e4, "y", -0x27a3, 0x7f0804bd,
-                "Redo", 0);
+    public void rejectsZhuyinTargetKeysNowThatOnlyEnglishAndVietnameseAreSupported() throws Exception {
+        Assert.assertNull(invokePlan(0x7f0b28d1, "a", new int[0]));
+        Assert.assertNull(invokePlan(0x7f0b28c8, "z", new int[0]));
+        Assert.assertNull(invokePlan(0x7f0b28cb, "c", new int[0]));
+        Assert.assertNull(invokePlan(0x7f0b28d0, "x", new int[0]));
+        Assert.assertNull(invokePlan(0x7f0b28e2, "v", new int[0]));
+        Assert.assertNull(invokePlan(0x7f0b28e4, "y", new int[0]));
     }
 
     @Test
@@ -65,8 +59,7 @@ public final class GboardLongPressQuickActionsPolicyTest {
         Assert.assertNull(invokePlan(0x7f0b19f6, "q", new int[0]));
         Assert.assertNull(invokePlan(0x7f0b18d4, null, new int[0]));
         Assert.assertNull(invokePlan(0x7f0b18d4, "a", new int[] {-0x2766}));
-        Assert.assertNull(invokePlan(0x7f0b28d1, "a", new int[] {-0x2766}));
-        Assert.assertNotNull(invokePlan(0x7f0b28d1, "a", new int[] {-0x2767}));
+        Assert.assertNotNull(invokePlan(0x7f0b18d4, "a", new int[] {-0x2767}));
     }
 
     @Test
@@ -80,14 +73,15 @@ public final class GboardLongPressQuickActionsPolicyTest {
                 contextMenuActionFor(0x7f0b1a03, "x", "LONG_PRESS", -0x2769));
         Assert.assertEquals(Integer.valueOf(0x1020022),
                 contextMenuActionFor(0x7f0b18a3, "V", "LONG_PRESS", -0x2768));
-        Assert.assertEquals(Integer.valueOf(0x102001f),
-                contextMenuActionFor(0x7f0b28d1, "a", "LONG_PRESS", -0x2766));
-        Assert.assertEquals(Integer.valueOf(0x1020021),
-                contextMenuActionFor(0x7f0b28cb, "c", "LONG_PRESS", -0x2767));
-        Assert.assertEquals(Integer.valueOf(0x1020020),
-                contextMenuActionFor(0x7f0b28d0, "x", "LONG_PRESS", -0x2769));
-        Assert.assertEquals(Integer.valueOf(0x1020022),
-                contextMenuActionFor(0x7f0b28e2, "v", "LONG_PRESS", -0x2768));
+
+        Assert.assertNull(contextMenuActionFor(
+                0x7f0b28d1, "a", "LONG_PRESS", -0x2766));
+        Assert.assertNull(contextMenuActionFor(
+                0x7f0b28cb, "c", "LONG_PRESS", -0x2767));
+        Assert.assertNull(contextMenuActionFor(
+                0x7f0b28d0, "x", "LONG_PRESS", -0x2769));
+        Assert.assertNull(contextMenuActionFor(
+                0x7f0b28e2, "v", "LONG_PRESS", -0x2768));
 
         Assert.assertNull(contextMenuActionFor(
                 0x7f0b1a0d, "z", "LONG_PRESS", -0x273d));
@@ -110,13 +104,13 @@ public final class GboardLongPressQuickActionsPolicyTest {
         Assert.assertTrue(isQuickActionEvent(
                 0x7f0b18d4, "a", "LONG_PRESS", -0x2766));
         Assert.assertTrue(isQuickActionEvent(
-                0x7f0b28c8, "z", "LONG_PRESS", -0x273d));
+                0x7f0b1a0d, "z", "LONG_PRESS", -0x273d));
         Assert.assertTrue(isQuickActionEvent(
-                0x7f0b28cb, "c", "LONG_PRESS", -0x2767));
+                0x7f0b18e9, "c", "LONG_PRESS", -0x2767));
         Assert.assertTrue(isQuickActionEvent(
                 0x7f0b1a03, "x", "LONG_PRESS", -0x2769));
         Assert.assertTrue(isQuickActionEvent(
-                0x7f0b28e2, "v", "LONG_PRESS", -0x2768));
+                0x7f0b19fb, "v", "LONG_PRESS", -0x2768));
         Assert.assertTrue(isQuickActionEvent(
                 0x7f0b18a9, "Y", "LONG_PRESS", -0x27a3));
 
@@ -133,7 +127,7 @@ public final class GboardLongPressQuickActionsPolicyTest {
         Assert.assertTrue(containsAssignedAction(
                 0x7f0b1a03, "x", new int[] {-0x2769}));
         Assert.assertTrue(containsAssignedAction(
-                0x7f0b28e2, "v", new int[] {-0x2767, -0x2768}));
+                0x7f0b19fb, "v", new int[] {-0x2767, -0x2768}));
         Assert.assertFalse(containsAssignedAction(
                 0x7f0b1a03, "x", new int[] {-0x2768}));
         Assert.assertFalse(containsAssignedAction(
@@ -141,25 +135,25 @@ public final class GboardLongPressQuickActionsPolicyTest {
     }
 
     @Test
-    public void globeChordUsesTheSameEnglishAndZhuyinMappings() {
+    public void globeChordUsesTheSameEnglishMappings() {
         Assert.assertSame(GboardEditingShortcutPolicy.Shortcut.SELECT_ALL,
                 GboardLongPressQuickActionsPolicy.shortcutForChord(
                         0x7f0b18d4, "a", 'a', -10043, -10009));
         Assert.assertSame(GboardEditingShortcutPolicy.Shortcut.CUT,
                 GboardLongPressQuickActionsPolicy.shortcutForChord(
-                        0x7f0b28d0, "x", -10009, -10043, -10009));
+                        0x7f0b1a03, "x", 'x', -10043, -10009));
         Assert.assertSame(GboardEditingShortcutPolicy.Shortcut.REDO,
                 GboardLongPressQuickActionsPolicy.shortcutForPointerTarget(
-                        0x7f0b28e4, "y", -10043, -10043));
+                        0x7f0b1a06, "y", -10043, -10043));
         Assert.assertNull(GboardLongPressQuickActionsPolicy.shortcutForChord(
                 0x7f0b19f6, "q", 'q', -10043, -10009));
     }
 
     @Test
-    public void zhuyinRangeAdmissionIsVersionOwnedAndBounded() {
+    public void zhuyinRangeAdmissionIsDisabled() {
         Assert.assertFalse(GboardLongPressQuickActionsPolicy.isZhuyinKeyId(0x7f0b295d));
-        Assert.assertTrue(GboardLongPressQuickActionsPolicy.isZhuyinKeyId(0x7f0b28b9));
-        Assert.assertTrue(GboardLongPressQuickActionsPolicy.isZhuyinKeyId(0x7f0b28e5));
+        Assert.assertFalse(GboardLongPressQuickActionsPolicy.isZhuyinKeyId(0x7f0b28b9));
+        Assert.assertFalse(GboardLongPressQuickActionsPolicy.isZhuyinKeyId(0x7f0b28e5));
         Assert.assertFalse(GboardLongPressQuickActionsPolicy.isZhuyinKeyId(0x7f0b298b));
     }
 

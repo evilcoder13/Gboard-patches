@@ -13,51 +13,7 @@ public enum GboardOcrEngine {
             "com.google.android.gms.vision.ocr",
             "com.google.mlkit.dynamite.text.latin",
             new String[]{"vision.ocr"},
-            1),
-    CHINESE(
-            "chinese",
-            "taser_tflite_gocrchinese_and_latin_mbv2_aksara_layout_gcn_mobile",
-            "zh",
-            "play-services-mlkit-text-recognition-chinese",
-            "text-recognition-chinese",
-            "optional-module-text-chinese",
-            "com.google.android.gms.mlkit_ocr_chinese",
-            "com.google.mlkit.dynamite.text.chinese",
-            new String[]{"mlkit.ocr.common", "mlkit.ocr.chinese"},
-            2),
-    JAPANESE(
-            "japanese",
-            "taser_tflite_gocrjapanese_and_latin_mbv2_aksara_layout_gcn_mobile",
-            "ja",
-            "play-services-mlkit-text-recognition-japanese",
-            "text-recognition-japanese",
-            "optional-module-text-japanese",
-            "com.google.android.gms.mlkit_ocr_japanese",
-            "com.google.mlkit.dynamite.text.japanese",
-            new String[]{"mlkit.ocr.japanese"},
-            4),
-    KOREAN(
-            "korean",
-            "taser_tflite_gocrkorean_and_latin_mbv2_aksara_layout_gcn_mobile",
-            "ko",
-            "play-services-mlkit-text-recognition-korean",
-            "text-recognition-korean",
-            "optional-module-text-korean",
-            "com.google.android.gms.mlkit_ocr_korean",
-            "com.google.mlkit.dynamite.text.korean",
-            new String[]{"mlkit.ocr.korean"},
-            5),
-    DEVANAGARI(
-            "devanagari",
-            "taser_tflite_gocrdevanagari_and_latin_mbv2_aksara_layout_gcn_mobile",
-            "hi",
-            "play-services-mlkit-text-recognition-devanagari",
-            "text-recognition-devanagari",
-            "optional-module-text-devanagari",
-            "com.google.android.gms.mlkit_ocr_devanagari",
-            "com.google.mlkit.dynamite.text.devanagari",
-            new String[]{"mlkit.ocr.devanagari"},
-            3);
+            1);
 
     private final String settingsValue;
     private final String configLabel;

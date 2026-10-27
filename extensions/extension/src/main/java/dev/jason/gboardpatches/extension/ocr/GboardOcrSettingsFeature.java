@@ -82,12 +82,7 @@ public final class GboardOcrSettingsFeature
         statusCurrent = GboardSettingsText.get(
                 context, R.string.gboard_patches_ocr_status_current);
         engineLabels = new String[]{
-                GboardSettingsText.get(context, R.string.gboard_patches_ocr_engine_latin_label),
-                GboardSettingsText.get(context, R.string.gboard_patches_ocr_engine_chinese_label),
-                GboardSettingsText.get(context, R.string.gboard_patches_ocr_engine_japanese_label),
-                GboardSettingsText.get(context, R.string.gboard_patches_ocr_engine_korean_label),
-                GboardSettingsText.get(
-                        context, R.string.gboard_patches_ocr_engine_devanagari_label)
+                GboardSettingsText.get(context, R.string.gboard_patches_ocr_engine_latin_label)
         };
     }
 

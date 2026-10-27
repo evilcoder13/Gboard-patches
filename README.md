@@ -1,7 +1,7 @@
 <h1 align="center">Gboard Patches</h1>
 
 <p align="center">
-  Morphe patches for Gboard with a mix of global improvements and Taiwan-focused enhancements.
+  Morphe patches for Gboard focused on core productivity, English &amp; Vietnamese input, and BlackBerry-style flick completion.
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 
 ## Overview
 
-Gboard Patches is a public Morphe source for a curated set of Gboard enhancements, including both global usability improvements and Taiwan-focused features for local input habits and day-to-day use.
+Gboard Patches is a streamlined Morphe source for Gboard enhancements, retaining core usability improvements for English and Vietnamese typing alongside BlackBerry-style flick-up word completion.
 
 ## Included Patches
 
@@ -26,52 +26,21 @@ Gboard Patches is a public Morphe source for a curated set of Gboard enhancement
 Features designed and built by this project rather than simply unlocking an existing Gboard flag.
 
 <details>
+  <summary><code>Flick-Up Word Completion</code></summary>
+
+  Swipe up on the left, center, or right region of the keyboard body to select the corresponding candidate word from the suggestion bar, similar to the BlackBerry 10 / KEYone keyboard.
+</details>
+
+<details>
   <summary><code>Clipboard Enhancements</code></summary>
 
   Lets you enhance clipboard retention time, item count limits, preview lines, countdown and creation-time labels, order index, grid columns, and optionally render only the first 1,000 characters on each clipboard card.
 </details>
 
 <details>
-  <summary><code>Web Clipboard</code></summary>
-
-  Hosts a phone-powered Web Clipboard portal that lets desktop browsers sync with Gboard over the same LAN, with a pairing code gate and an optional Quick Settings Tile.
-
-  Preview:
-
-  <img alt="Web Clipboard pairing gate" src="assets/features/web-clipboard/01-pairing-gate.png" width="720">
-
-  <img alt="Web Clipboard conversation view" src="assets/features/web-clipboard/02-conversation-view.png" width="720">
-
-</details>
-
-<details>
-  <summary><code>Floating Web Search</code></summary>
-
-  Open a floating web page directly from Gboard to quickly search for the information you need.
-</details>
-
-<details>
-  <summary><code>Custom Theme</code></summary>
-
-Import custom ZIP themes and beautiful themes from the official Rboard repository.
-</details>
-
-<details>
-  <summary><code>Frosted Glass</code></summary>
-
-  Adds live background blur and custom-theme transparency to the keyboard. Available on Android 12+ devices that support cross-window blur, with custom themes such as Animal Black.
-</details>
-
-<details>
-  <summary><code>FTP Server</code></summary>
-
-  Hosts an FTP server on your phone so desktop FTP clients can browse, upload, download, and resume file transfers over the same LAN. It supports anonymous or password-protected access, a configurable control and passive port range, read-only mode, <code>/sdcard</code> or a user-selected folder as the root, live transfer progress, retained partial uploads, and an optional Quick Settings Tile.
-</details>
-
-<details>
   <summary><code>Long-Press Editing Shortcuts</code></summary>
 
-  Add Select all, Undo, Copy, Cut, Paste, and Redo long-press shortcuts to English QWERTY and Zhuyin, with an optional globe-key drag gesture that follows the same physical key positions across supported alphabet layouts.
+  Add Select all, Undo, Copy, Cut, Paste, and Redo long-press shortcuts to Latin alphabet layouts (English and Vietnamese), with an optional globe-key drag gesture that follows the same physical key positions.
 </details>
 
 <details>
@@ -82,27 +51,9 @@ Import custom ZIP themes and beautiful themes from the official Rboard repositor
 </details>
 
 <details>
-  <summary><code>Swipeable Custom Top Row</code></summary>
-
-  Lets you swipe the keyboard top row horizontally to open customizable text and JavaScript slots.
-</details>
-
-<details>
   <summary><code>Incognito Mode Toggle</code></summary>
 
   Add an Incognito toggle to the Access Point toolbar and configure clipboard and voice typing availability while Incognito mode is active.
-</details>
-
-<details>
-  <summary><code>Custom Symbols</code></summary>
-
-  Adds a dedicated symbols tab and a quick access entry from the comma long-press popup.
-</details>
-
-<details>
-  <summary><code>Simple Calculator</code></summary>
-
-  Adds an optional inline calculator for arithmetic expressions typed in any text field. The result appears in Gboard's suggestion row; tap it to replace the expression, or long-press it to copy the result.
 </details>
 
 <details>
@@ -112,27 +63,9 @@ Import custom ZIP themes and beautiful themes from the official Rboard repositor
 </details>
 
 <details>
-  <summary><code>G Logo on Spacebar</code></summary>
-
-  Show the G Logo on the spacebar and hide the language label.
-</details>
-
-<details>
-  <summary><code>Rounded Keyboard Panel</code></summary>
-
-  Customize which corners of the keyboard panel are rounded, and set the top and bottom radii separately.
-</details>
-
-<details>
   <summary><code>Latin Globe Key Ignore Interval</code></summary>
 
-  Add an independent English globe key ignore interval override for post-typing language-switch delay.
-</details>
-
-<details>
-  <summary><code>Emojis, stickers & GIFs Tab Order</code></summary>
-
-Customize the bottom tab order in Gboard's Emojis, stickers & GIFs panel with drag-and-drop reordering.
+  Add an independent English/Latin globe key ignore interval override for post-typing language-switch delay.
 </details>
 
 <details>
@@ -147,21 +80,15 @@ Customize the bottom tab order in Gboard's Emojis, stickers & GIFs panel with dr
 Features already present in Gboard that are exposed by enabling hidden settings, rollout gates, or built-in behavior.
 
 <details>
-  <summary><code>AI Writing Tools</code></summary>
-
-  Enables the <code>Text correction &gt; Writing tools</code> setting with support for all languages.
-</details>
-
-<details>
   <summary><code>Advanced Voice Typing</code></summary>
 
-  Enable Advanced Voice Typing with automatic punctuation, and separately enable automatic punctuation for Traditional Chinese voice typing, which does not support Advanced Voice Typing.
+  Enable Advanced Voice Typing with automatic punctuation and speech recognition engine selection.
 </details>
 
 <details>
   <summary><code>Enable OCR / Scan Text</code></summary>
 
-  Enable the OCR / Scan Text feature with Latin, Chinese, Japanese, Korean, and Devanagari recognition backends.
+  Enable the OCR / Scan Text feature with Latin script recognition (supporting English and Vietnamese).
 </details>
 
 <details>
@@ -189,21 +116,9 @@ Features already present in Gboard that are exposed by enabling hidden settings,
 </details>
 
 <details>
-  <summary><code>Key Shape Selection</code></summary>
-
-  Enables the <code>Key shape</code> option inside theme details without forcing rounded keys by default.
-</details>
-
-<details>
   <summary><code>Use Bluetooth Microphone</code></summary>
 
   Enables the <code>Voice typing &gt; Use Bluetooth microphone</code> setting and its related rollout gate.
-</details>
-
-<details>
-  <summary><code>Change emoji size</code></summary>
-
-  Enables Gboard's emoji size setting.
 </details>
 
 <details>
@@ -219,21 +134,9 @@ Features already present in Gboard that are exposed by enabling hidden settings,
 </details>
 
 <details>
-  <summary><code>Enable accessibility layout</code></summary>
-
-  Enables accessibility layout.
-</details>
-
-<details>
-  <summary><code>Quick Insert</code></summary>
-
-Enables the Quick Insert panel and toolbar access point.
-</details>
-
-<details>
   <summary><code>Close Proactive Suggestions</code></summary>
 
-Shows a dismiss button in the proactive suggestions bar.
+  Shows a dismiss button in the proactive suggestions bar.
 </details>
 
 <details>
@@ -243,55 +146,9 @@ Shows a dismiss button in the proactive suggestions bar.
 </details>
 
 <details>
-  <summary><code>Access Points menu style</code></summary>
-
-  Lets you switch between the new and legacy Access Points menu styles.
-</details>
-
-<details>
-  <summary><code>Top Toolbar Item Count</code></summary>
-
-  Lets you customize the top toolbar item count.
-</details>
-
-<details>
-  <summary><code>Settings Homepage Override</code></summary>
-
-  Lets you switch between the new and legacy Gboard settings homepage styles.
-</details>
-
-<details>
-  <summary><code>Developer options</code></summary>
-
-  Enable Developer options and the Flag Editor, allowing you to modify flag values.
-</details>
-
-<details>
   <summary><code>Package Rename</code></summary>
 
   Renames the patched package so it can be installed alongside the official Gboard app.
-</details>
-
-### Taiwan-focused Features
-
-Features tailored to Traditional Chinese and Zhuyin input workflows.
-
-<details>
-  <summary><code>Zhuyin Slide Input</code></summary>
-
-  On the Zhuyin keyboard, swipe up or down to enter English letters without switching to another keyboard layout.
-</details>
-
-<details>
-  <summary><code>Zhuyin Quick Traditional/Simplified Toggle</code></summary>
-
-  Swipe up on the Zhuyin <code>ㄥ</code> key to quickly toggle between Traditional and Simplified Chinese.
-</details>
-
-<details>
-  <summary><code>Zhuyin Bottom Row Key Sizes</code></summary>
-
-  Adjusts the seven bottom-row slot sizes on the Zhuyin keyboard, including <code>?123</code>, <code>，</code>, the globe key, space, <code>ㄦ</code>, backspace, and the IME action key.
 </details>
 
 ## Install
