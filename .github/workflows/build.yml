@@ -41,7 +41,13 @@ jobs:
         env:
           GITHUB_ACTOR: ${{ github.repository_owner }}
           GITHUB_TOKEN: ${{ secrets.MORPHE_PACKAGES_TOKEN || secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-        run: ./gradlew :patches:buildAndroid :extensions:extension:assembleRelease --no-daemon
+        run: |
+          ./gradlew :patches:buildAndroid :extensions:extension:assembleRelease --stacktrace --no-daemon 2>&1 | tee build.log || true
+          if [ ! -f patches/build/outputs/mpp/*.mpp ] && [ ! -f patches/build/libs/*.mpp ]; then
+            echo "=== Gradle Build Failed. Last 200 lines of build.log ==="
+            tail -n 200 build.log
+            exit 1
+          fi
 
       - name: Upload Built MPP & Extension Artifacts
         uses: actions/upload-artifact@v4
