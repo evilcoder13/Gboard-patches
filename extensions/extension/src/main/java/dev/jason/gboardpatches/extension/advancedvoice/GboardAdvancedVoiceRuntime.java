@@ -16,8 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import dev.jason.gboardpatches.extension.rambler.GboardRamblerStockPolicy;
-
 public final class GboardAdvancedVoiceRuntime {
     private static final String TAG = "GboardPatches";
     private static final String LOG_PREFIX = "[gboard-advanced-voice] ";
@@ -51,7 +49,6 @@ public final class GboardAdvancedVoiceRuntime {
             String flagName = readFlagName(receiver);
             Object result = GboardAdvancedVoiceStockPolicy.maybeForceStockFlag(
                     flagName, stockResult);
-            result = GboardRamblerStockPolicy.maybeForceStockRouteValue(flagName, result);
             if (Boolean.FALSE.equals(stockResult) && Boolean.TRUE.equals(result)) {
                 logInfo("forced " + flagName + " via nxw#g()");
             }
