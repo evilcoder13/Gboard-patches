@@ -39,8 +39,8 @@ jobs:
 
       - name: Build MPP and Extensions
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.MORPHE_PACKAGES_TOKEN || secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
         run: ./gradlew :patches:buildAndroid :extensions:extension:assembleRelease --no-daemon
 
       - name: Upload Built MPP & Extension Artifacts
